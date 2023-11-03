@@ -122,6 +122,82 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
+[GeneratedDocument1]
+DocumentPath=Project Outputs for XMAS_2023_PCB\BOM\Bill of Materials-XMAS_2023_PCB.xls
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Design Rule Check - XMAS_2023_PCB.html
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Pick Place\Pick Place for XMAS_2023_PCB.csv
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Pick Place\Pick Place for XMAS_2023_PCB.txt
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for XMAS_2023_PCB\NC Drill\XMAS_2023_PCB.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GBL
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GBO
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GBP
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GBS
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GM3
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GTL
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GTO
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GTP
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.GTS
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for XMAS_2023_PCB\NC Drill\XMAS_2023_PCB.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.REP
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument19]
+DocumentPath=Project Outputs for XMAS_2023_PCB\NC Drill\XMAS_2023_PCB.TXT
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
