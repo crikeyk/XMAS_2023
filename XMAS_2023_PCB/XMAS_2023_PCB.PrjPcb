@@ -195,6 +195,10 @@ DocumentPath=Project Outputs for XMAS_2023_PCB\Gerber\XMAS_2023_PCB.RUL
 DItemRevisionGUID=
 
 [GeneratedDocument19]
+DocumentPath=Project Outputs for XMAS_2023_PCB\ExportSTEP\XMAS_2023_PCB.step
+DItemRevisionGUID=
+
+[GeneratedDocument20]
 DocumentPath=Project Outputs for XMAS_2023_PCB\NC Drill\XMAS_2023_PCB.TXT
 DItemRevisionGUID=
 
