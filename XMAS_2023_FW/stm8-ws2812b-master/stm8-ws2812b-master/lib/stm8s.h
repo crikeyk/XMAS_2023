@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -29,50 +29,52 @@
 #ifndef __STM8S_H
 #define __STM8S_H
 
+#define STM8S003
+
 /** @addtogroup STM8S_StdPeriph_Driver
   * @{
   */
-  
+
 /* Uncomment the line below according to the target STM8S or STM8A device used in your
    application. */
 
- /* #define STM8S208 */      /*!< STM8S High density devices with CAN */
- /* #define STM8S207 */      /*!< STM8S High density devices without CAN */
- /* #define STM8S007 */      /*!< STM8S Value Line High density devices */
- /* #define STM8AF52Ax */    /*!< STM8A High density devices with CAN */
- /* #define STM8AF62Ax */    /*!< STM8A High density devices without CAN */
- /* #define STM8S105 */      /*!< STM8S Medium density devices */
- /* #define STM8S005 */      /*!< STM8S Value Line Medium density devices */
- /* #define STM8AF626x */    /*!< STM8A Medium density devices */
- /* #define STM8AF622x */    /*!< STM8A Low density devices */
-/* define STM8S103      /*!< STM8S Low density devices */
- #define STM8S003      /*!< STM8S Value Line Low density devices */
- /* #define STM8S903 */      /*!< STM8S Low density devices */
- /* #define STM8S001 */      /*!< STM8S Value Line Low denisty devices */
+/* #define STM8S208 */      /*!< STM8S High density devices with CAN */
+/* #define STM8S207 */      /*!< STM8S High density devices without CAN */
+/* #define STM8S007 */      /*!< STM8S Value Line High density devices */
+/* #define STM8AF52Ax */    /*!< STM8A High density devices with CAN */
+/* #define STM8AF62Ax */    /*!< STM8A High density devices without CAN */
+/* #define STM8S105 */      /*!< STM8S Medium density devices */
+/* #define STM8S005 */      /*!< STM8S Value Line Medium density devices */
+/* #define STM8AF626x */    /*!< STM8A Medium density devices */
+/* #define STM8AF622x */    /*!< STM8A Low density devices */
+/* #define STM8S103 */      /*!< STM8S Low density devices */
+/* #define STM8S003 */      /*!< STM8S Value Line Low density devices */
+/* #define STM8S903 */      /*!< STM8S Low density devices */
+/* #define STM8S001 */      /*!< STM8S Value Line Low denisty devices */
 
 /*   Tip: To avoid modifying this file each time you need to switch between these
-        devices, you can define the device in your toolchain compiler preprocessor. 
+        devices, you can define the device in your toolchain compiler preprocessor.
 
   - High-Density STM8A devices are the STM8AF52xx STM8AF6269/8x/Ax,
     STM8AF51xx, and STM8AF6169/7x/8x/9x/Ax microcontrollers where the Flash memory
     density ranges between 32 to 128 Kbytes
   - Medium-Density STM8A devices are the STM8AF622x/4x, STM8AF6266/68,
-    STM8AF612x/4x, and STM8AF6166/68 microcontrollers where the Flash memory 
+    STM8AF612x/4x, and STM8AF6166/68 microcontrollers where the Flash memory
     density ranges between 8 to 32 Kbytes
   - High-Density STM8S devices are the STM8S207xx, STM8S007 and STM8S208xx microcontrollers
     where the Flash memory density ranges between 32 to 128 Kbytes.
   - Medium-Density STM8S devices are the STM8S105x and STM8S005 microcontrollers
     where the Flash memory density ranges between 16 to 32-Kbytes.
   - Low-Density STM8A devices are the STM8AF622x microcontrollers where the Flash
-    density is 8 Kbytes. 
+    density is 8 Kbytes.
   - Low-Density STM8S devices are the STM8S103xx, STM8S003, STM8S903xx and STM8S001 microcontrollers
     where the Flash density is 8 Kbytes. */
 
 #if !defined (STM8S208) && !defined (STM8S207) && !defined (STM8S105) && \
     !defined (STM8S103) && !defined (STM8S903) && !defined (STM8AF52Ax) && \
     !defined (STM8AF62Ax) && !defined (STM8AF626x) && !defined (STM8S007) && \
-    !defined (STM8S003)&& !defined (STM8S005) && !defined(STM8S001) && !defined (STM8AF622x) 
- #error "Please select first the target STM8S/A device used in your application (in stm8s.h file)"
+    !defined (STM8S003)&& !defined (STM8S005) && !defined(STM8S001) && !defined (STM8AF622x)
+#error "Please select first the target STM8S/A device used in your application (in stm8s.h file)"
 #endif
 
 /******************************************************************************/
@@ -80,20 +82,22 @@
 /******************************************************************************/
 /* Check the used compiler */
 #if defined(__CSMC__)
- #define _COSMIC_
+#define _COSMIC_
 #elif defined(__RCST7__)
- #define _RAISONANCE_
+#define _RAISONANCE_
 #elif defined(__ICCSTM8__)
- #define _IAR_
+#define _IAR_
+#elif defined(__SDCC)
+#define _SDCC_
 #else
- #error "Unsupported Compiler!"          /* Compiler defines not found */
+#error "Unsupported Compiler!"          /* Compiler defines not found */
 #endif
 
 #if !defined  USE_STDPERIPH_DRIVER
 /* Comment the line below if you will not use the peripherals drivers.
    In this case, these drivers will not be included and the application code will be
    based on direct access to peripherals registers */
- #define USE_STDPERIPH_DRIVER
+// #define USE_STDPERIPH_DRIVER
 #endif
 
 /**
@@ -104,12 +108,12 @@
         can define the HSE value in your toolchain compiler preprocessor.
   */
 #if !defined  HSE_Value
- #if defined (STM8S208) || defined (STM8S207) || defined (STM8S007) || defined (STM8AF52Ax) || \
+#if defined (STM8S208) || defined (STM8S207) || defined (STM8S007) || defined (STM8AF52Ax) || \
      defined (STM8AF62Ax) || defined (STM8AF622x)
-  #define HSE_VALUE ((uint32_t)24000000) /* Value of the External oscillator in Hz*/
- #else
-  #define HSE_VALUE ((uint32_t)16000000) /* Value of the External oscillator in Hz*/
- #endif /* STM8S208 || STM8S207 || STM8S007 || STM8AF62Ax || STM8AF52Ax || STM8AF622x */
+#define HSE_VALUE ((uint32_t)24000000) /* Value of the External oscillator in Hz*/
+#else
+#define HSE_VALUE ((uint32_t)16000000) /* Value of the External oscillator in Hz*/
+#endif /* STM8S208 || STM8S207 || STM8S007 || STM8AF62Ax || STM8AF52Ax || STM8AF622x */
 #endif /* HSE_Value */
 
 /**
@@ -119,13 +123,13 @@
 #define LSI_VALUE   ((uint32_t)128000)   /*!< Typical Value of the LSI in Hz */
 
 #ifdef _COSMIC_
- #define FAR  @far
+#define FAR  @far
  #define NEAR @near
  #define TINY @tiny
  #define EEPROM @eeprom
  #define CONST  const
 #elif defined (_RAISONANCE_) /* __RCST7__ */
- #define FAR  far
+#define FAR  far
  #define NEAR data
  #define TINY page0
  #define EEPROM eeprom
@@ -137,9 +141,13 @@
  #else /* STM8S903, STM8S103, STM8S001, STM8S003, STM8S105, STM8AF626x, STM8AF622x */
   /*!< Used with memory Models for code less than 64K */
   #define MEMCPY memcpy
- #endif /* STM8S208 or STM8S207 or STM8S007 or STM8AF62Ax or STM8AF52Ax */ 
-#else /*_IAR_*/
- #define FAR  __far
+ #endif /* STM8S208 or STM8S207 or STM8S007 or STM8AF62Ax or STM8AF52Ax */
+#elif defined (_SDCC_)
+#define FAR  __far
+ #define NEAR __near
+ #define CONST  const
+#elif defined (_IAR_)
+#define FAR  __far
  #define NEAR __near
  #define TINY __tiny
  #define EEPROM __eeprom
@@ -147,7 +155,7 @@
 #endif /* __CSMC__ */
 
 /* For FLASH routines, select whether pointer will be declared as near (2 bytes,
-   to handle code smaller than 64KB) or far (3 bytes, to handle code larger 
+   to handle code smaller than 64KB) or far (3 bytes, to handle code larger
    than 64K) */
 
 #if defined (STM8S105) || defined (STM8S005) || defined (STM8S103) || defined (STM8S003) || \
@@ -157,8 +165,8 @@
  #define MemoryAddressCast uint16_t
 #else /* STM8S208 or STM8S207 or STM8AF62Ax or STM8AF52Ax */
 /*!< Used with memory Models for code higher than 64K */
- #define PointerAttr FAR
- #define MemoryAddressCast uint32_t
+#define PointerAttr FAR
+#define MemoryAddressCast uint32_t
 #endif /* STM8S105 or STM8S103 or STM8S003 or STM8S001 or STM8S903 or STM8AF626x or STM8AF622x */
 
 /* Uncomment the line below to enable the FLASH functions execution from RAM */
@@ -167,22 +175,22 @@
 #endif /* RAM_EXECUTION */
 
 #ifdef RAM_EXECUTION
- #ifdef _COSMIC_
+#ifdef _COSMIC_
    #define IN_RAM(a) a
  #elif defined (_RAISONANCE_) /* __RCST7__ */
    #define IN_RAM(a) a inram
  #else /*_IAR_*/
   #define IN_RAM(a) __ramfunc a
  #endif /* _COSMIC_ */
-#else 
-  #define IN_RAM(a) a
+#else
+#define IN_RAM(a) a
 #endif /* RAM_EXECUTION */
 
 /*!< [31:16] STM8S Standard Peripheral Library main version V2.3.0*/
-#define __STM8S_STDPERIPH_VERSION_MAIN   ((uint8_t)0x02) /*!< [31:24] main version */                                  
+#define __STM8S_STDPERIPH_VERSION_MAIN   ((uint8_t)0x02) /*!< [31:24] main version */
 #define __STM8S_STDPERIPH_VERSION_SUB1   ((uint8_t)0x03) /*!< [23:16] sub1 version */
 #define __STM8S_STDPERIPH_VERSION_SUB2   ((uint8_t)0x00) /*!< [15:8]  sub2 version */
-#define __STM8S_STDPERIPH_VERSION_RC     ((uint8_t)0x00) /*!< [7:0]  release candidate */ 
+#define __STM8S_STDPERIPH_VERSION_RC     ((uint8_t)0x00) /*!< [7:0]  release candidate */
 #define __STM8S_STDPERIPH_VERSION       ( (__STM8S_STDPERIPH_VERSION_MAIN << 24)\
                                           |(__STM8S_STDPERIPH_VERSION_SUB1 << 16)\
                                           |(__STM8S_STDPERIPH_VERSION_SUB2 << 8)\
@@ -250,7 +258,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 /**
   * @}
   */
-  
+
 /** @addtogroup MAP_FILE_Exported_Types_and_Constants
   * @{
   */
@@ -264,13 +272,13 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
   */
 typedef struct GPIO_struct
 {
-  __IO uint8_t ODR; /*!< Output Data Register */
-  __IO uint8_t IDR; /*!< Input Data Register */
-  __IO uint8_t DDR; /*!< Data Direction Register */
-  __IO uint8_t CR1; /*!< Configuration Register 1 */
-  __IO uint8_t CR2; /*!< Configuration Register 2 */
+    __IO uint8_t ODR; /*!< Output Data Register */
+    __IO uint8_t IDR; /*!< Input Data Register */
+    __IO uint8_t DDR; /*!< Data Direction Register */
+    __IO uint8_t CR1; /*!< Configuration Register 1 */
+    __IO uint8_t CR2; /*!< Configuration Register 2 */
 }
-GPIO_TypeDef;
+        GPIO_TypeDef;
 
 /**
   * @}
@@ -387,7 +395,7 @@ GPIO_TypeDef;
   * @brief  Analog to Digital Converter (ADC2)
   */
 #if defined(STM8S208) || defined(STM8S207) || defined (STM8S007) || defined (STM8AF52Ax) || defined (STM8AF62Ax)
- typedef struct ADC2_struct
+typedef struct ADC2_struct
  {
   __IO uint8_t CSR;        /*!< ADC2 control status register */
   __IO uint8_t CR1;        /*!< ADC2 configuration register 1 */
@@ -439,11 +447,11 @@ GPIO_TypeDef;
   */
 typedef struct AWU_struct
 {
-  __IO uint8_t CSR; /*!< AWU Control status register */
-  __IO uint8_t APR; /*!< AWU Asynchronous prescaler buffer */
-  __IO uint8_t TBR; /*!< AWU Time base selection register */
+    __IO uint8_t CSR; /*!< AWU Control status register */
+    __IO uint8_t APR; /*!< AWU Asynchronous prescaler buffer */
+    __IO uint8_t TBR; /*!< AWU Time base selection register */
 }
-AWU_TypeDef;
+        AWU_TypeDef;
 
 /** @addtogroup AWU_Registers_Reset_Value
   * @{
@@ -479,9 +487,9 @@ AWU_TypeDef;
 
 typedef struct BEEP_struct
 {
-  __IO uint8_t CSR; /*!< BEEP Control status register */
+    __IO uint8_t CSR; /*!< BEEP Control status register */
 }
-BEEP_TypeDef;
+        BEEP_TypeDef;
 
 /** @addtogroup BEEP_Registers_Reset_Value
   * @{
@@ -507,22 +515,22 @@ BEEP_TypeDef;
   */
 typedef struct CLK_struct
 {
-  __IO uint8_t ICKR;     /*!< Internal Clocks Control Register */
-  __IO uint8_t ECKR;     /*!< External Clocks Control Register */
-  uint8_t RESERVED;      /*!< Reserved byte */
-  __IO uint8_t CMSR;     /*!< Clock Master Status Register */
-  __IO uint8_t SWR;      /*!< Clock Master Switch Register */
-  __IO uint8_t SWCR;     /*!< Switch Control Register */
-  __IO uint8_t CKDIVR;   /*!< Clock Divider Register */
-  __IO uint8_t PCKENR1;  /*!< Peripheral Clock Gating Register 1 */
-  __IO uint8_t CSSR;     /*!< Clock Security System Register */
-  __IO uint8_t CCOR;     /*!< Configurable Clock Output Register */
-  __IO uint8_t PCKENR2;  /*!< Peripheral Clock Gating Register 2 */
-  uint8_t RESERVED1;     /*!< Reserved byte */
-  __IO uint8_t HSITRIMR; /*!< HSI Calibration Trimmer Register */
-  __IO uint8_t SWIMCCR;  /*!< SWIM clock control register */
+    __IO uint8_t ICKR;     /*!< Internal Clocks Control Register */
+    __IO uint8_t ECKR;     /*!< External Clocks Control Register */
+    uint8_t RESERVED;      /*!< Reserved byte */
+    __IO uint8_t CMSR;     /*!< Clock Master Status Register */
+    __IO uint8_t SWR;      /*!< Clock Master Switch Register */
+    __IO uint8_t SWCR;     /*!< Switch Control Register */
+    __IO uint8_t CKDIVR;   /*!< Clock Divider Register */
+    __IO uint8_t PCKENR1;  /*!< Peripheral Clock Gating Register 1 */
+    __IO uint8_t CSSR;     /*!< Clock Security System Register */
+    __IO uint8_t CCOR;     /*!< Configurable Clock Output Register */
+    __IO uint8_t PCKENR2;  /*!< Peripheral Clock Gating Register 2 */
+    uint8_t RESERVED1;     /*!< Reserved byte */
+    __IO uint8_t HSITRIMR; /*!< HSI Calibration Trimmer Register */
+    __IO uint8_t SWIMCCR;  /*!< SWIM clock control register */
 }
-CLK_TypeDef;
+        CLK_TypeDef;
 
 /** @addtogroup CLK_Registers_Reset_Value
   * @{
@@ -570,7 +578,7 @@ CLK_TypeDef;
 #define CLK_CKDIVR_HSIDIV    ((uint8_t)0x18) /*!< High speed internal clock prescaler */
 #define CLK_CKDIVR_CPUDIV    ((uint8_t)0x07) /*!< CPU clock prescaler */
 
-#define CLK_PCKENR1_TIM1     ((uint8_t)0x80) /*!< Timer 1 clock enable */ 
+#define CLK_PCKENR1_TIM1     ((uint8_t)0x80) /*!< Timer 1 clock enable */
 #define CLK_PCKENR1_TIM3     ((uint8_t)0x40) /*!< Timer 3 clock enable */
 #define CLK_PCKENR1_TIM2     ((uint8_t)0x20) /*!< Timer 2 clock enable */
 #define CLK_PCKENR1_TIM5     ((uint8_t)0x20) /*!< Timer 5 clock enable */
@@ -611,40 +619,40 @@ CLK_TypeDef;
 
 typedef struct TIM1_struct
 {
-  __IO uint8_t CR1;   /*!< control register 1 */
-  __IO uint8_t CR2;   /*!< control register 2 */
-  __IO uint8_t SMCR;  /*!< Synchro mode control register */
-  __IO uint8_t ETR;   /*!< external trigger register */
-  __IO uint8_t IER;   /*!< interrupt enable register*/
-  __IO uint8_t SR1;   /*!< status register 1 */
-  __IO uint8_t SR2;   /*!< status register 2 */
-  __IO uint8_t EGR;   /*!< event generation register */
-  __IO uint8_t CCMR1; /*!< CC mode register 1 */
-  __IO uint8_t CCMR2; /*!< CC mode register 2 */
-  __IO uint8_t CCMR3; /*!< CC mode register 3 */
-  __IO uint8_t CCMR4; /*!< CC mode register 4 */
-  __IO uint8_t CCER1; /*!< CC enable register 1 */
-  __IO uint8_t CCER2; /*!< CC enable register 2 */
-  __IO uint8_t CNTRH; /*!< counter high */
-  __IO uint8_t CNTRL; /*!< counter low */
-  __IO uint8_t PSCRH; /*!< prescaler high */
-  __IO uint8_t PSCRL; /*!< prescaler low */
-  __IO uint8_t ARRH;  /*!< auto-reload register high */
-  __IO uint8_t ARRL;  /*!< auto-reload register low */
-  __IO uint8_t RCR;   /*!< Repetition Counter register */
-  __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
-  __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
-  __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
-  __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
-  __IO uint8_t CCR3H; /*!< capture/compare register 3 high */
-  __IO uint8_t CCR3L; /*!< capture/compare register 3 low */
-  __IO uint8_t CCR4H; /*!< capture/compare register 3 high */
-  __IO uint8_t CCR4L; /*!< capture/compare register 3 low */
-  __IO uint8_t BKR;   /*!< Break Register */
-  __IO uint8_t DTR;   /*!< dead-time register */
-  __IO uint8_t OISR;  /*!< Output idle register */
+    __IO uint8_t CR1;   /*!< control register 1 */
+    __IO uint8_t CR2;   /*!< control register 2 */
+    __IO uint8_t SMCR;  /*!< Synchro mode control register */
+    __IO uint8_t ETR;   /*!< external trigger register */
+    __IO uint8_t IER;   /*!< interrupt enable register*/
+    __IO uint8_t SR1;   /*!< status register 1 */
+    __IO uint8_t SR2;   /*!< status register 2 */
+    __IO uint8_t EGR;   /*!< event generation register */
+    __IO uint8_t CCMR1; /*!< CC mode register 1 */
+    __IO uint8_t CCMR2; /*!< CC mode register 2 */
+    __IO uint8_t CCMR3; /*!< CC mode register 3 */
+    __IO uint8_t CCMR4; /*!< CC mode register 4 */
+    __IO uint8_t CCER1; /*!< CC enable register 1 */
+    __IO uint8_t CCER2; /*!< CC enable register 2 */
+    __IO uint8_t CNTRH; /*!< counter high */
+    __IO uint8_t CNTRL; /*!< counter low */
+    __IO uint8_t PSCRH; /*!< prescaler high */
+    __IO uint8_t PSCRL; /*!< prescaler low */
+    __IO uint8_t ARRH;  /*!< auto-reload register high */
+    __IO uint8_t ARRL;  /*!< auto-reload register low */
+    __IO uint8_t RCR;   /*!< Repetition Counter register */
+    __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
+    __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
+    __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
+    __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
+    __IO uint8_t CCR3H; /*!< capture/compare register 3 high */
+    __IO uint8_t CCR3L; /*!< capture/compare register 3 low */
+    __IO uint8_t CCR4H; /*!< capture/compare register 3 high */
+    __IO uint8_t CCR4L; /*!< capture/compare register 3 low */
+    __IO uint8_t BKR;   /*!< Break Register */
+    __IO uint8_t DTR;   /*!< dead-time register */
+    __IO uint8_t OISR;  /*!< Output idle register */
 }
-TIM1_TypeDef;
+        TIM1_TypeDef;
 
 /** @addtogroup TIM1_Registers_Reset_Value
   * @{
@@ -823,33 +831,33 @@ TIM1_TypeDef;
 
 typedef struct TIM2_struct
 {
-  __IO uint8_t CR1;   /*!< control register 1 */
+    __IO uint8_t CR1;   /*!< control register 1 */
 #if defined(STM8S103) || defined(STM8S003) || defined(STM8S001)
-	uint8_t RESERVED1; /*!< Reserved register */
+    uint8_t RESERVED1; /*!< Reserved register */
 	uint8_t RESERVED2; /*!< Reserved register */
 #endif
-  __IO uint8_t IER;   /*!< interrupt enable register */
-  __IO uint8_t SR1;   /*!< status register 1 */
-  __IO uint8_t SR2;   /*!< status register 2 */
-  __IO uint8_t EGR;   /*!< event generation register */
-  __IO uint8_t CCMR1; /*!< CC mode register 1 */
-  __IO uint8_t CCMR2; /*!< CC mode register 2 */
-  __IO uint8_t CCMR3; /*!< CC mode register 3 */
-  __IO uint8_t CCER1; /*!< CC enable register 1 */
-  __IO uint8_t CCER2; /*!< CC enable register 2 */
-  __IO uint8_t CNTRH; /*!< counter high */
-  __IO uint8_t CNTRL; /*!< counter low */
-  __IO uint8_t PSCR;  /*!< prescaler register */
-  __IO uint8_t ARRH;  /*!< auto-reload register high */
-  __IO uint8_t ARRL;  /*!< auto-reload register low */
-  __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
-  __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
-  __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
-  __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
-  __IO uint8_t CCR3H; /*!< capture/compare register 3 high */
-  __IO uint8_t CCR3L; /*!< capture/compare register 3 low */
+    __IO uint8_t IER;   /*!< interrupt enable register */
+    __IO uint8_t SR1;   /*!< status register 1 */
+    __IO uint8_t SR2;   /*!< status register 2 */
+    __IO uint8_t EGR;   /*!< event generation register */
+    __IO uint8_t CCMR1; /*!< CC mode register 1 */
+    __IO uint8_t CCMR2; /*!< CC mode register 2 */
+    __IO uint8_t CCMR3; /*!< CC mode register 3 */
+    __IO uint8_t CCER1; /*!< CC enable register 1 */
+    __IO uint8_t CCER2; /*!< CC enable register 2 */
+    __IO uint8_t CNTRH; /*!< counter high */
+    __IO uint8_t CNTRL; /*!< counter low */
+    __IO uint8_t PSCR;  /*!< prescaler register */
+    __IO uint8_t ARRH;  /*!< auto-reload register high */
+    __IO uint8_t ARRL;  /*!< auto-reload register low */
+    __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
+    __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
+    __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
+    __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
+    __IO uint8_t CCR3H; /*!< capture/compare register 3 high */
+    __IO uint8_t CCR3L; /*!< capture/compare register 3 low */
 }
-TIM2_TypeDef;
+        TIM2_TypeDef;
 
 /** @addtogroup TIM2_Registers_Reset_Value
   * @{
@@ -951,25 +959,25 @@ TIM2_TypeDef;
   */
 typedef struct TIM3_struct
 {
-  __IO uint8_t CR1;   /*!< control register 1 */
-  __IO uint8_t IER;   /*!< interrupt enable register */
-  __IO uint8_t SR1;   /*!< status register 1 */
-  __IO uint8_t SR2;   /*!< status register 2 */
-  __IO uint8_t EGR;   /*!< event generation register */
-  __IO uint8_t CCMR1; /*!< CC mode register 1 */
-  __IO uint8_t CCMR2; /*!< CC mode register 2 */
-  __IO uint8_t CCER1; /*!< CC enable register 1 */
-  __IO uint8_t CNTRH; /*!< counter high */
-  __IO uint8_t CNTRL; /*!< counter low */
-  __IO uint8_t PSCR;  /*!< prescaler register */
-  __IO uint8_t ARRH;  /*!< auto-reload register high */
-  __IO uint8_t ARRL;  /*!< auto-reload register low */
-  __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
-  __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
-  __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
-  __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
+    __IO uint8_t CR1;   /*!< control register 1 */
+    __IO uint8_t IER;   /*!< interrupt enable register */
+    __IO uint8_t SR1;   /*!< status register 1 */
+    __IO uint8_t SR2;   /*!< status register 2 */
+    __IO uint8_t EGR;   /*!< event generation register */
+    __IO uint8_t CCMR1; /*!< CC mode register 1 */
+    __IO uint8_t CCMR2; /*!< CC mode register 2 */
+    __IO uint8_t CCER1; /*!< CC enable register 1 */
+    __IO uint8_t CNTRH; /*!< counter high */
+    __IO uint8_t CNTRL; /*!< counter low */
+    __IO uint8_t PSCR;  /*!< prescaler register */
+    __IO uint8_t ARRH;  /*!< auto-reload register high */
+    __IO uint8_t ARRL;  /*!< auto-reload register low */
+    __IO uint8_t CCR1H; /*!< capture/compare register 1 high */
+    __IO uint8_t CCR1L; /*!< capture/compare register 1 low */
+    __IO uint8_t CCR2H; /*!< capture/compare register 2 high */
+    __IO uint8_t CCR2L; /*!< capture/compare register 2 low */
 }
-TIM3_TypeDef;
+        TIM3_TypeDef;
 
 /** @addtogroup TIM3_Registers_Reset_Value
   * @{
@@ -1057,19 +1065,19 @@ TIM3_TypeDef;
 
 typedef struct TIM4_struct
 {
-  __IO uint8_t CR1;  /*!< control register 1 */
+    __IO uint8_t CR1;  /*!< control register 1 */
 #if defined(STM8S103) || defined(STM8S003) || defined(STM8S001)
-	uint8_t RESERVED1; /*!< Reserved register */
+    uint8_t RESERVED1; /*!< Reserved register */
 	uint8_t RESERVED2; /*!< Reserved register */
 #endif
-  __IO uint8_t IER;  /*!< interrupt enable register */
-  __IO uint8_t SR1;  /*!< status register 1 */
-  __IO uint8_t EGR;  /*!< event generation register */
-  __IO uint8_t CNTR; /*!< counter register */
-  __IO uint8_t PSCR; /*!< prescaler register */
-  __IO uint8_t ARR;  /*!< auto-reload register */
+    __IO uint8_t IER;  /*!< interrupt enable register */
+    __IO uint8_t SR1;  /*!< status register 1 */
+    __IO uint8_t EGR;  /*!< event generation register */
+    __IO uint8_t CNTR; /*!< counter register */
+    __IO uint8_t PSCR; /*!< prescaler register */
+    __IO uint8_t ARR;  /*!< auto-reload register */
 }
-TIM4_TypeDef;
+        TIM4_TypeDef;
 
 /** @addtogroup TIM4_Registers_Reset_Value
   * @{
@@ -1120,29 +1128,29 @@ TIM4_TypeDef;
 
 typedef struct TIM5_struct
 {
-  __IO uint8_t CR1;       /*!<TIM5 Control Register 1                */
-  __IO uint8_t CR2;       /*!<TIM5 Control Register 2                */
-  __IO uint8_t SMCR;      /*!<TIM5 Slave Mode Control Register       */
-  __IO uint8_t IER;       /*!<TIM5 Interrupt Enable Register         */
-  __IO uint8_t SR1;       /*!<TIM5 Status Register 1                 */
-  __IO uint8_t SR2;       /*!<TIM5 Status Register 2                 */
-  __IO uint8_t EGR;       /*!<TIM5 Event Generation Register         */
-  __IO uint8_t CCMR1;     /*!<TIM5 Capture/Compare Mode Register 1   */
-  __IO uint8_t CCMR2;     /*!<TIM5 Capture/Compare Mode Register 2   */
-  __IO uint8_t CCMR3;     /*!<TIM5 Capture/Compare Mode Register 3   */
-  __IO uint8_t CCER1;     /*!<TIM5 Capture/Compare Enable Register 1 */
-  __IO uint8_t CCER2;     /*!<TIM5 Capture/Compare Enable Register 2 */
-  __IO uint8_t CNTRH;     /*!<TIM5 Counter High                      */
-  __IO uint8_t CNTRL;     /*!<TIM5 Counter Low                       */
-  __IO uint8_t PSCR;      /*!<TIM5 Prescaler Register                */
-  __IO uint8_t ARRH;      /*!<TIM5 Auto-Reload Register High         */
-  __IO uint8_t ARRL;      /*!<TIM5 Auto-Reload Register Low          */
-  __IO uint8_t CCR1H;     /*!<TIM5 Capture/Compare Register 1 High   */
-  __IO uint8_t CCR1L;     /*!<TIM5 Capture/Compare Register 1 Low    */
-  __IO uint8_t CCR2H;     /*!<TIM5 Capture/Compare Register 2 High   */
-  __IO uint8_t CCR2L;     /*!<TIM5 Capture/Compare Register 2 Low    */
-  __IO uint8_t CCR3H;     /*!<TIM5 Capture/Compare Register 3 High   */
-  __IO uint8_t CCR3L;     /*!<TIM5 Capture/Compare Register 3 Low    */
+    __IO uint8_t CR1;       /*!<TIM5 Control Register 1                */
+    __IO uint8_t CR2;       /*!<TIM5 Control Register 2                */
+    __IO uint8_t SMCR;      /*!<TIM5 Slave Mode Control Register       */
+    __IO uint8_t IER;       /*!<TIM5 Interrupt Enable Register         */
+    __IO uint8_t SR1;       /*!<TIM5 Status Register 1                 */
+    __IO uint8_t SR2;       /*!<TIM5 Status Register 2                 */
+    __IO uint8_t EGR;       /*!<TIM5 Event Generation Register         */
+    __IO uint8_t CCMR1;     /*!<TIM5 Capture/Compare Mode Register 1   */
+    __IO uint8_t CCMR2;     /*!<TIM5 Capture/Compare Mode Register 2   */
+    __IO uint8_t CCMR3;     /*!<TIM5 Capture/Compare Mode Register 3   */
+    __IO uint8_t CCER1;     /*!<TIM5 Capture/Compare Enable Register 1 */
+    __IO uint8_t CCER2;     /*!<TIM5 Capture/Compare Enable Register 2 */
+    __IO uint8_t CNTRH;     /*!<TIM5 Counter High                      */
+    __IO uint8_t CNTRL;     /*!<TIM5 Counter Low                       */
+    __IO uint8_t PSCR;      /*!<TIM5 Prescaler Register                */
+    __IO uint8_t ARRH;      /*!<TIM5 Auto-Reload Register High         */
+    __IO uint8_t ARRL;      /*!<TIM5 Auto-Reload Register Low          */
+    __IO uint8_t CCR1H;     /*!<TIM5 Capture/Compare Register 1 High   */
+    __IO uint8_t CCR1L;     /*!<TIM5 Capture/Compare Register 1 Low    */
+    __IO uint8_t CCR2H;     /*!<TIM5 Capture/Compare Register 2 High   */
+    __IO uint8_t CCR2L;     /*!<TIM5 Capture/Compare Register 2 Low    */
+    __IO uint8_t CCR3H;     /*!<TIM5 Capture/Compare Register 3 High   */
+    __IO uint8_t CCR3L;     /*!<TIM5 Capture/Compare Register 3 Low    */
 }TIM5_TypeDef;
 
 /** @addtogroup TIM5_Registers_Reset_Value
@@ -1251,7 +1259,7 @@ typedef struct TIM5_struct
 /**
   * @}
   */
-	
+
 /*----------------------------------------------------------------------------*/
 /**
   * @brief  8-bit system timer  with synchro module(TIM6)
@@ -1269,7 +1277,7 @@ typedef struct TIM6_struct
     __IO uint8_t PSCR; 	/*!< prescaler register */
     __IO uint8_t ARR; 	/*!< auto-reload register */
 }
-TIM6_TypeDef;
+        TIM6_TypeDef;
 /** @addtogroup TIM6_Registers_Reset_Value
   * @{
   */
@@ -1327,23 +1335,23 @@ TIM6_TypeDef;
 
 typedef struct I2C_struct
 {
-  __IO uint8_t CR1;       /*!< I2C control register 1 */
-  __IO uint8_t CR2;       /*!< I2C control register 2 */
-  __IO uint8_t FREQR;     /*!< I2C frequency register */
-  __IO uint8_t OARL;      /*!< I2C own address register LSB */
-  __IO uint8_t OARH;      /*!< I2C own address register MSB */
-  uint8_t RESERVED1;      /*!< Reserved byte */
-  __IO uint8_t DR;        /*!< I2C data register */
-  __IO uint8_t SR1;       /*!< I2C status register 1 */
-  __IO uint8_t SR2;       /*!< I2C status register 2 */
-  __IO uint8_t SR3;       /*!< I2C status register 3 */
-  __IO uint8_t ITR;       /*!< I2C interrupt register */
-  __IO uint8_t CCRL;      /*!< I2C clock control register low */
-  __IO uint8_t CCRH;      /*!< I2C clock control register high */
-  __IO uint8_t TRISER;    /*!< I2C maximum rise time register */
-  uint8_t RESERVED2;      /*!< Reserved byte */
+    __IO uint8_t CR1;       /*!< I2C control register 1 */
+    __IO uint8_t CR2;       /*!< I2C control register 2 */
+    __IO uint8_t FREQR;     /*!< I2C frequency register */
+    __IO uint8_t OARL;      /*!< I2C own address register LSB */
+    __IO uint8_t OARH;      /*!< I2C own address register MSB */
+    uint8_t RESERVED1;      /*!< Reserved byte */
+    __IO uint8_t DR;        /*!< I2C data register */
+    __IO uint8_t SR1;       /*!< I2C status register 1 */
+    __IO uint8_t SR2;       /*!< I2C status register 2 */
+    __IO uint8_t SR3;       /*!< I2C status register 3 */
+    __IO uint8_t ITR;       /*!< I2C interrupt register */
+    __IO uint8_t CCRL;      /*!< I2C clock control register low */
+    __IO uint8_t CCRH;      /*!< I2C clock control register high */
+    __IO uint8_t TRISER;    /*!< I2C maximum rise time register */
+    uint8_t RESERVED2;      /*!< Reserved byte */
 }
-I2C_TypeDef;
+        I2C_TypeDef;
 
 /** @addtogroup I2C_Registers_Reset_Value
   * @{
@@ -1434,16 +1442,16 @@ I2C_TypeDef;
 
 typedef struct ITC_struct
 {
-  __IO uint8_t ISPR1; /*!< Interrupt Software Priority register 1 */
-  __IO uint8_t ISPR2; /*!< Interrupt Software Priority register 2 */
-  __IO uint8_t ISPR3; /*!< Interrupt Software Priority register 3 */
-  __IO uint8_t ISPR4; /*!< Interrupt Software Priority register 4 */
-  __IO uint8_t ISPR5; /*!< Interrupt Software Priority register 5 */
-  __IO uint8_t ISPR6; /*!< Interrupt Software Priority register 6 */
-  __IO uint8_t ISPR7; /*!< Interrupt Software Priority register 7 */
-  __IO uint8_t ISPR8; /*!< Interrupt Software Priority register 8 */
+    __IO uint8_t ISPR1; /*!< Interrupt Software Priority register 1 */
+    __IO uint8_t ISPR2; /*!< Interrupt Software Priority register 2 */
+    __IO uint8_t ISPR3; /*!< Interrupt Software Priority register 3 */
+    __IO uint8_t ISPR4; /*!< Interrupt Software Priority register 4 */
+    __IO uint8_t ISPR5; /*!< Interrupt Software Priority register 5 */
+    __IO uint8_t ISPR6; /*!< Interrupt Software Priority register 6 */
+    __IO uint8_t ISPR7; /*!< Interrupt Software Priority register 7 */
+    __IO uint8_t ISPR8; /*!< Interrupt Software Priority register 8 */
 }
-ITC_TypeDef;
+        ITC_TypeDef;
 
 /** @addtogroup ITC_Registers_Reset_Value
   * @{
@@ -1472,10 +1480,10 @@ ITC_TypeDef;
 
 typedef struct EXTI_struct
 {
-  __IO uint8_t CR1; /*!< External Interrupt Control Register for PORTA to PORTD */
-  __IO uint8_t CR2; /*!< External Interrupt Control Register for PORTE and TLI */
+    __IO uint8_t CR1; /*!< External Interrupt Control Register for PORTA to PORTD */
+    __IO uint8_t CR2; /*!< External Interrupt Control Register for PORTE and TLI */
 }
-EXTI_TypeDef;
+        EXTI_TypeDef;
 
 /** @addtogroup EXTI_Registers_Reset_Value
   * @{
@@ -1504,8 +1512,6 @@ EXTI_TypeDef;
   * @}
   */
 
-
-
 /*----------------------------------------------------------------------------*/
 /**
   * @brief  FLASH program and Data memory (FLASH)
@@ -1513,19 +1519,19 @@ EXTI_TypeDef;
 
 typedef struct FLASH_struct
 {
-  __IO uint8_t CR1;       /*!< Flash control register 1 */
-  __IO uint8_t CR2;       /*!< Flash control register 2 */
-  __IO uint8_t NCR2;      /*!< Flash complementary control register 2 */
-  __IO uint8_t FPR;       /*!< Flash protection register */
-  __IO uint8_t NFPR;      /*!< Flash complementary protection register */
-  __IO uint8_t IAPSR;     /*!< Flash in-application programming status register */
-  uint8_t RESERVED1;      /*!< Reserved byte */
-  uint8_t RESERVED2;      /*!< Reserved byte */
-  __IO uint8_t PUKR;      /*!< Flash program memory unprotection register */
-  uint8_t RESERVED3;      /*!< Reserved byte */
-  __IO uint8_t DUKR;      /*!< Data EEPROM unprotection register */
+    __IO uint8_t CR1;       /*!< Flash control register 1 */
+    __IO uint8_t CR2;       /*!< Flash control register 2 */
+    __IO uint8_t NCR2;      /*!< Flash complementary control register 2 */
+    __IO uint8_t FPR;       /*!< Flash protection register */
+    __IO uint8_t NFPR;      /*!< Flash complementary protection register */
+    __IO uint8_t IAPSR;     /*!< Flash in-application programming status register */
+    uint8_t RESERVED1;      /*!< Reserved byte */
+    uint8_t RESERVED2;      /*!< Reserved byte */
+    __IO uint8_t PUKR;      /*!< Flash program memory unprotection register */
+    uint8_t RESERVED3;      /*!< Reserved byte */
+    __IO uint8_t DUKR;      /*!< Data EEPROM unprotection register */
 }
-FLASH_TypeDef;
+        FLASH_TypeDef;
 
 /** @addtogroup FLASH_Registers_Reset_Value
   * @{
@@ -1583,23 +1589,23 @@ FLASH_TypeDef;
   */
 typedef struct OPT_struct
 {
-  __IO uint8_t OPT0;  /*!< Option byte 0: Read-out protection (not accessible in IAP mode) */
-  __IO uint8_t OPT1;  /*!< Option byte 1: User boot code */
-  __IO uint8_t NOPT1; /*!< Complementary Option byte 1 */
-  __IO uint8_t OPT2;  /*!< Option byte 2: Alternate function remapping */
-  __IO uint8_t NOPT2; /*!< Complementary Option byte 2 */
-  __IO uint8_t OPT3;  /*!< Option byte 3: Watchdog option */
-  __IO uint8_t NOPT3; /*!< Complementary Option byte 3 */
-  __IO uint8_t OPT4;  /*!< Option byte 4: Clock option */
-  __IO uint8_t NOPT4; /*!< Complementary Option byte 4 */
-  __IO uint8_t OPT5;  /*!< Option byte 5: HSE clock startup */
-  __IO uint8_t NOPT5; /*!< Complementary Option byte 5 */
-  uint8_t RESERVED1;  /*!< Reserved Option byte*/
-  uint8_t RESERVED2; /*!< Reserved Option byte*/
-  __IO uint8_t OPT7;  /*!< Option byte 7: flash wait states */
-  __IO uint8_t NOPT7; /*!< Complementary Option byte 7 */
+    __IO uint8_t OPT0;  /*!< Option byte 0: Read-out protection (not accessible in IAP mode) */
+    __IO uint8_t OPT1;  /*!< Option byte 1: User boot code */
+    __IO uint8_t NOPT1; /*!< Complementary Option byte 1 */
+    __IO uint8_t OPT2;  /*!< Option byte 2: Alternate function remapping */
+    __IO uint8_t NOPT2; /*!< Complementary Option byte 2 */
+    __IO uint8_t OPT3;  /*!< Option byte 3: Watchdog option */
+    __IO uint8_t NOPT3; /*!< Complementary Option byte 3 */
+    __IO uint8_t OPT4;  /*!< Option byte 4: Clock option */
+    __IO uint8_t NOPT4; /*!< Complementary Option byte 4 */
+    __IO uint8_t OPT5;  /*!< Option byte 5: HSE clock startup */
+    __IO uint8_t NOPT5; /*!< Complementary Option byte 5 */
+    uint8_t RESERVED1;  /*!< Reserved Option byte*/
+    uint8_t RESERVED2; /*!< Reserved Option byte*/
+    __IO uint8_t OPT7;  /*!< Option byte 7: flash wait states */
+    __IO uint8_t NOPT7; /*!< Complementary Option byte 7 */
 }
-OPT_TypeDef;
+        OPT_TypeDef;
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -1608,11 +1614,11 @@ OPT_TypeDef;
 
 typedef struct IWDG_struct
 {
-  __IO uint8_t KR;  /*!< Key Register */
-  __IO uint8_t PR;  /*!< Prescaler Register */
-  __IO uint8_t RLR; /*!< Reload Register */
+    __IO uint8_t KR;  /*!< Key Register */
+    __IO uint8_t PR;  /*!< Prescaler Register */
+    __IO uint8_t RLR; /*!< Reload Register */
 }
-IWDG_TypeDef;
+        IWDG_TypeDef;
 
 /** @addtogroup IWDG_Registers_Reset_Value
   * @{
@@ -1632,10 +1638,10 @@ IWDG_TypeDef;
 
 typedef struct WWDG_struct
 {
-  __IO uint8_t CR; /*!< Control Register */
-  __IO uint8_t WR; /*!< Window Register */
+    __IO uint8_t CR; /*!< Control Register */
+    __IO uint8_t WR; /*!< Window Register */
 }
-WWDG_TypeDef;
+        WWDG_TypeDef;
 
 /** @addtogroup WWDG_Registers_Reset_Value
   * @{
@@ -1670,9 +1676,9 @@ WWDG_TypeDef;
 
 typedef struct RST_struct
 {
-  __IO uint8_t SR; /*!< Reset status register */
+    __IO uint8_t SR; /*!< Reset status register */
 }
-RST_TypeDef;
+        RST_TypeDef;
 
 /** @addtogroup RST_Registers_Bits_Definition
   * @{
@@ -1695,16 +1701,16 @@ RST_TypeDef;
 
 typedef struct SPI_struct
 {
-  __IO uint8_t CR1;    /*!< SPI control register 1 */
-  __IO uint8_t CR2;    /*!< SPI control register 2 */
-  __IO uint8_t ICR;    /*!< SPI interrupt control register */
-  __IO uint8_t SR;     /*!< SPI status register */
-  __IO uint8_t DR;     /*!< SPI data I/O register */
-  __IO uint8_t CRCPR;  /*!< SPI CRC polynomial register */
-  __IO uint8_t RXCRCR; /*!< SPI Rx CRC register */
-  __IO uint8_t TXCRCR; /*!< SPI Tx CRC register */
+    __IO uint8_t CR1;    /*!< SPI control register 1 */
+    __IO uint8_t CR2;    /*!< SPI control register 2 */
+    __IO uint8_t ICR;    /*!< SPI interrupt control register */
+    __IO uint8_t SR;     /*!< SPI status register */
+    __IO uint8_t DR;     /*!< SPI data I/O register */
+    __IO uint8_t CRCPR;  /*!< SPI CRC polynomial register */
+    __IO uint8_t RXCRCR; /*!< SPI Rx CRC register */
+    __IO uint8_t TXCRCR; /*!< SPI Tx CRC register */
 }
-SPI_TypeDef;
+        SPI_TypeDef;
 
 /** @addtogroup SPI_Registers_Reset_Value
   * @{
@@ -1766,19 +1772,19 @@ SPI_TypeDef;
 
 typedef struct UART1_struct
 {
-  __IO uint8_t SR;   /*!< UART1 status register */
-  __IO uint8_t DR;   /*!< UART1 data register */
-  __IO uint8_t BRR1; /*!< UART1 baud rate register */
-  __IO uint8_t BRR2; /*!< UART1 DIV mantissa[11:8] SCIDIV fraction */
-  __IO uint8_t CR1;  /*!< UART1 control register 1 */
-  __IO uint8_t CR2;  /*!< UART1 control register 2 */
-  __IO uint8_t CR3;  /*!< UART1 control register 3 */
-  __IO uint8_t CR4;  /*!< UART1 control register 4 */
-  __IO uint8_t CR5;  /*!< UART1 control register 5 */
-  __IO uint8_t GTR;  /*!< UART1 guard time register */
-  __IO uint8_t PSCR; /*!< UART1 prescaler register */
+    __IO uint8_t SR;   /*!< UART1 status register */
+    __IO uint8_t DR;   /*!< UART1 data register */
+    __IO uint8_t BRR1; /*!< UART1 baud rate register */
+    __IO uint8_t BRR2; /*!< UART1 DIV mantissa[11:8] SCIDIV fraction */
+    __IO uint8_t CR1;  /*!< UART1 control register 1 */
+    __IO uint8_t CR2;  /*!< UART1 control register 2 */
+    __IO uint8_t CR3;  /*!< UART1 control register 3 */
+    __IO uint8_t CR4;  /*!< UART1 control register 4 */
+    __IO uint8_t CR5;  /*!< UART1 control register 5 */
+    __IO uint8_t GTR;  /*!< UART1 guard time register */
+    __IO uint8_t PSCR; /*!< UART1 prescaler register */
 }
-UART1_TypeDef;
+        UART1_TypeDef;
 
 /** @addtogroup UART1_Registers_Reset_Value
   * @{
@@ -1864,20 +1870,20 @@ UART1_TypeDef;
 
 typedef struct UART2_struct
 {
-  __IO uint8_t SR;   /*!< UART1 status register */
-  __IO uint8_t DR;   /*!< UART1 data register */
-  __IO uint8_t BRR1; /*!< UART1 baud rate register */
-  __IO uint8_t BRR2; /*!< UART1 DIV mantissa[11:8] SCIDIV fraction */
-  __IO uint8_t CR1;  /*!< UART1 control register 1 */
-  __IO uint8_t CR2;  /*!< UART1 control register 2 */
-  __IO uint8_t CR3;  /*!< UART1 control register 3 */
-  __IO uint8_t CR4;  /*!< UART1 control register 4 */
-  __IO uint8_t CR5;  /*!< UART1 control register 5 */
-	__IO uint8_t CR6;  /*!< UART1 control register 6 */
-  __IO uint8_t GTR;  /*!< UART1 guard time register */
-  __IO uint8_t PSCR; /*!< UART1 prescaler register */
+    __IO uint8_t SR;   /*!< UART1 status register */
+    __IO uint8_t DR;   /*!< UART1 data register */
+    __IO uint8_t BRR1; /*!< UART1 baud rate register */
+    __IO uint8_t BRR2; /*!< UART1 DIV mantissa[11:8] SCIDIV fraction */
+    __IO uint8_t CR1;  /*!< UART1 control register 1 */
+    __IO uint8_t CR2;  /*!< UART1 control register 2 */
+    __IO uint8_t CR3;  /*!< UART1 control register 3 */
+    __IO uint8_t CR4;  /*!< UART1 control register 4 */
+    __IO uint8_t CR5;  /*!< UART1 control register 5 */
+    __IO uint8_t CR6;  /*!< UART1 control register 6 */
+    __IO uint8_t GTR;  /*!< UART1 guard time register */
+    __IO uint8_t PSCR; /*!< UART1 prescaler register */
 }
-UART2_TypeDef;
+        UART2_TypeDef;
 
 /** @addtogroup UART2_Registers_Reset_Value
   * @{
@@ -1971,18 +1977,18 @@ UART2_TypeDef;
 
 typedef struct UART3_struct
 {
-  __IO uint8_t SR;       /*!< status register */
-  __IO uint8_t DR;       /*!< data register */
-  __IO uint8_t BRR1;     /*!< baud rate register */
-  __IO uint8_t BRR2;     /*!< DIV mantissa[11:8] SCIDIV fraction */
-  __IO uint8_t CR1;      /*!< control register 1 */
-  __IO uint8_t CR2;      /*!< control register 2 */
-  __IO uint8_t CR3;      /*!< control register 3 */
-  __IO uint8_t CR4;      /*!< control register 4 */
-  uint8_t RESERVED; /*!< Reserved byte */
-  __IO uint8_t CR6;      /*!< control register 5 */
+    __IO uint8_t SR;       /*!< status register */
+    __IO uint8_t DR;       /*!< data register */
+    __IO uint8_t BRR1;     /*!< baud rate register */
+    __IO uint8_t BRR2;     /*!< DIV mantissa[11:8] SCIDIV fraction */
+    __IO uint8_t CR1;      /*!< control register 1 */
+    __IO uint8_t CR2;      /*!< control register 2 */
+    __IO uint8_t CR3;      /*!< control register 3 */
+    __IO uint8_t CR4;      /*!< control register 4 */
+    uint8_t RESERVED; /*!< Reserved byte */
+    __IO uint8_t CR6;      /*!< control register 5 */
 }
-UART3_TypeDef;
+        UART3_TypeDef;
 
 /** @addtogroup UART3_Registers_Reset_Value
   * @{
@@ -2173,158 +2179,158 @@ UART4_TypeDef;
 
 typedef struct
 {
-  __IO uint8_t MCR;    /*!< CAN master control register */
-  __IO uint8_t MSR;    /*!< CAN master status register */
-  __IO uint8_t TSR;    /*!< CAN transmit status register */
-  __IO uint8_t TPR;    /*!< CAN transmit priority register */
-  __IO uint8_t RFR;    /*!< CAN receive FIFO register */
-  __IO uint8_t IER;    /*!< CAN interrupt enable register */
-  __IO uint8_t DGR;    /*!< CAN diagnosis register */
-  __IO uint8_t PSR;    /*!< CAN page selection register */
+    __IO uint8_t MCR;    /*!< CAN master control register */
+    __IO uint8_t MSR;    /*!< CAN master status register */
+    __IO uint8_t TSR;    /*!< CAN transmit status register */
+    __IO uint8_t TPR;    /*!< CAN transmit priority register */
+    __IO uint8_t RFR;    /*!< CAN receive FIFO register */
+    __IO uint8_t IER;    /*!< CAN interrupt enable register */
+    __IO uint8_t DGR;    /*!< CAN diagnosis register */
+    __IO uint8_t PSR;    /*!< CAN page selection register */
 
-  union
-  {
-    struct
+    union
     {
-      __IO uint8_t MCSR;
-      __IO uint8_t MDLCR;
-      __IO uint8_t MIDR1;
-      __IO uint8_t MIDR2;
-      __IO uint8_t MIDR3;
-      __IO uint8_t MIDR4;
-      __IO uint8_t MDAR1;
-      __IO uint8_t MDAR2;
-      __IO uint8_t MDAR3;
-      __IO uint8_t MDAR4;
-      __IO uint8_t MDAR5;
-      __IO uint8_t MDAR6;
-      __IO uint8_t MDAR7;
-      __IO uint8_t MDAR8;
-      __IO uint8_t MTSRL;
-      __IO uint8_t MTSRH;
-    }TxMailbox;
+        struct
+        {
+            __IO uint8_t MCSR;
+            __IO uint8_t MDLCR;
+            __IO uint8_t MIDR1;
+            __IO uint8_t MIDR2;
+            __IO uint8_t MIDR3;
+            __IO uint8_t MIDR4;
+            __IO uint8_t MDAR1;
+            __IO uint8_t MDAR2;
+            __IO uint8_t MDAR3;
+            __IO uint8_t MDAR4;
+            __IO uint8_t MDAR5;
+            __IO uint8_t MDAR6;
+            __IO uint8_t MDAR7;
+            __IO uint8_t MDAR8;
+            __IO uint8_t MTSRL;
+            __IO uint8_t MTSRH;
+        }TxMailbox;
 
-    struct
-    {
-      __IO uint8_t FR01;
-      __IO uint8_t FR02;
-      __IO uint8_t FR03;
-      __IO uint8_t FR04;
-      __IO uint8_t FR05;
-      __IO uint8_t FR06;
-      __IO uint8_t FR07;
-      __IO uint8_t FR08;
-      
-      __IO uint8_t FR09;
-      __IO uint8_t FR10;
-      __IO uint8_t FR11;
-      __IO uint8_t FR12;
-      __IO uint8_t FR13;
-      __IO uint8_t FR14;
-      __IO uint8_t FR15;
-      __IO uint8_t FR16;
-    }Filter;
+        struct
+        {
+            __IO uint8_t FR01;
+            __IO uint8_t FR02;
+            __IO uint8_t FR03;
+            __IO uint8_t FR04;
+            __IO uint8_t FR05;
+            __IO uint8_t FR06;
+            __IO uint8_t FR07;
+            __IO uint8_t FR08;
 
-    struct
-    {
-      __IO uint8_t F0R1;
-      __IO uint8_t F0R2;
-      __IO uint8_t F0R3;
-      __IO uint8_t F0R4;
-      __IO uint8_t F0R5;
-      __IO uint8_t F0R6;
-      __IO uint8_t F0R7;
-      __IO uint8_t F0R8;
+            __IO uint8_t FR09;
+            __IO uint8_t FR10;
+            __IO uint8_t FR11;
+            __IO uint8_t FR12;
+            __IO uint8_t FR13;
+            __IO uint8_t FR14;
+            __IO uint8_t FR15;
+            __IO uint8_t FR16;
+        }Filter;
 
-      __IO uint8_t F1R1;
-      __IO uint8_t F1R2;
-      __IO uint8_t F1R3;
-      __IO uint8_t F1R4;
-      __IO uint8_t F1R5;
-      __IO uint8_t F1R6;
-      __IO uint8_t F1R7;
-      __IO uint8_t F1R8;
-    }Filter01;
-    
-    struct
-    {
-      __IO uint8_t F2R1;
-      __IO uint8_t F2R2;
-      __IO uint8_t F2R3;
-      __IO uint8_t F2R4;
-      __IO uint8_t F2R5;
-      __IO uint8_t F2R6;
-      __IO uint8_t F2R7;
-      __IO uint8_t F2R8;
-	
-      __IO uint8_t F3R1;
-      __IO uint8_t F3R2;
-      __IO uint8_t F3R3;
-      __IO uint8_t F3R4;
-      __IO uint8_t F3R5;
-      __IO uint8_t F3R6;
-      __IO uint8_t F3R7;
-      __IO uint8_t F3R8;
-    }Filter23;
-    
-    struct
-    {
-      __IO uint8_t F4R1;
-      __IO uint8_t F4R2;
-      __IO uint8_t F4R3;
-      __IO uint8_t F4R4;
-      __IO uint8_t F4R5;
-      __IO uint8_t F4R6;
-      __IO uint8_t F4R7;
-      __IO uint8_t F4R8;
-			
-      __IO uint8_t F5R1;
-      __IO uint8_t F5R2;
-      __IO uint8_t F5R3;
-      __IO uint8_t F5R4;
-      __IO uint8_t F5R5;
-      __IO uint8_t F5R6;
-      __IO uint8_t F5R7;
-      __IO uint8_t F5R8;
-    } Filter45;
-    
-    struct
-    {
-      __IO uint8_t ESR;
-      __IO uint8_t EIER;
-      __IO uint8_t TECR;
-      __IO uint8_t RECR;
-      __IO uint8_t BTR1;
-      __IO uint8_t BTR2;
-      uint8_t Reserved1[2];
-      __IO uint8_t FMR1;
-      __IO uint8_t FMR2;
-      __IO uint8_t FCR1;
-      __IO uint8_t FCR2;
-      __IO uint8_t FCR3;
-      uint8_t Reserved2[3];
-    }Config;
-    
-    struct
-    {
-      __IO uint8_t MFMI;
-      __IO uint8_t MDLCR;
-      __IO uint8_t MIDR1;
-      __IO uint8_t MIDR2;
-      __IO uint8_t MIDR3;
-      __IO uint8_t MIDR4;
-      __IO uint8_t MDAR1;
-      __IO uint8_t MDAR2;
-      __IO uint8_t MDAR3;
-      __IO uint8_t MDAR4;
-      __IO uint8_t MDAR5;
-      __IO uint8_t MDAR6;
-      __IO uint8_t MDAR7;
-      __IO uint8_t MDAR8;
-      __IO uint8_t MTSRL;
-      __IO uint8_t MTSRH;
-    }RxFIFO;
-  }Page; 
+        struct
+        {
+            __IO uint8_t F0R1;
+            __IO uint8_t F0R2;
+            __IO uint8_t F0R3;
+            __IO uint8_t F0R4;
+            __IO uint8_t F0R5;
+            __IO uint8_t F0R6;
+            __IO uint8_t F0R7;
+            __IO uint8_t F0R8;
+
+            __IO uint8_t F1R1;
+            __IO uint8_t F1R2;
+            __IO uint8_t F1R3;
+            __IO uint8_t F1R4;
+            __IO uint8_t F1R5;
+            __IO uint8_t F1R6;
+            __IO uint8_t F1R7;
+            __IO uint8_t F1R8;
+        }Filter01;
+
+        struct
+        {
+            __IO uint8_t F2R1;
+            __IO uint8_t F2R2;
+            __IO uint8_t F2R3;
+            __IO uint8_t F2R4;
+            __IO uint8_t F2R5;
+            __IO uint8_t F2R6;
+            __IO uint8_t F2R7;
+            __IO uint8_t F2R8;
+
+            __IO uint8_t F3R1;
+            __IO uint8_t F3R2;
+            __IO uint8_t F3R3;
+            __IO uint8_t F3R4;
+            __IO uint8_t F3R5;
+            __IO uint8_t F3R6;
+            __IO uint8_t F3R7;
+            __IO uint8_t F3R8;
+        }Filter23;
+
+        struct
+        {
+            __IO uint8_t F4R1;
+            __IO uint8_t F4R2;
+            __IO uint8_t F4R3;
+            __IO uint8_t F4R4;
+            __IO uint8_t F4R5;
+            __IO uint8_t F4R6;
+            __IO uint8_t F4R7;
+            __IO uint8_t F4R8;
+
+            __IO uint8_t F5R1;
+            __IO uint8_t F5R2;
+            __IO uint8_t F5R3;
+            __IO uint8_t F5R4;
+            __IO uint8_t F5R5;
+            __IO uint8_t F5R6;
+            __IO uint8_t F5R7;
+            __IO uint8_t F5R8;
+        } Filter45;
+
+        struct
+        {
+            __IO uint8_t ESR;
+            __IO uint8_t EIER;
+            __IO uint8_t TECR;
+            __IO uint8_t RECR;
+            __IO uint8_t BTR1;
+            __IO uint8_t BTR2;
+            uint8_t Reserved1[2];
+            __IO uint8_t FMR1;
+            __IO uint8_t FMR2;
+            __IO uint8_t FCR1;
+            __IO uint8_t FCR2;
+            __IO uint8_t FCR3;
+            uint8_t Reserved2[3];
+        }Config;
+
+        struct
+        {
+            __IO uint8_t MFMI;
+            __IO uint8_t MDLCR;
+            __IO uint8_t MIDR1;
+            __IO uint8_t MIDR2;
+            __IO uint8_t MIDR3;
+            __IO uint8_t MIDR4;
+            __IO uint8_t MDAR1;
+            __IO uint8_t MDAR2;
+            __IO uint8_t MDAR3;
+            __IO uint8_t MDAR4;
+            __IO uint8_t MDAR5;
+            __IO uint8_t MDAR6;
+            __IO uint8_t MDAR7;
+            __IO uint8_t MDAR8;
+            __IO uint8_t MTSRL;
+            __IO uint8_t MTSRH;
+        }RxFIFO;
+    }Page;
 } CAN_TypeDef;
 
 /** @addtogroup CAN_Registers_Bits_Definition
@@ -2423,62 +2429,62 @@ typedef struct
 #define CAN_EIER_EPVIE    ((uint8_t)0x02)
 #define CAN_EIER_BOFIE    ((uint8_t)0x04)
 #define CAN_EIER_LECIE    ((uint8_t)0x10)
-#define CAN_EIER_ERRIE    ((uint8_t)0x80)    
+#define CAN_EIER_ERRIE    ((uint8_t)0x80)
 
 /* CAN transmit error counter Register bits(CAN_TECR) */
-#define CAN_TECR_TEC0     ((uint8_t)0x01)    
-#define CAN_TECR_TEC1     ((uint8_t)0x02)    
-#define CAN_TECR_TEC2     ((uint8_t)0x04)    
-#define CAN_TECR_TEC3     ((uint8_t)0x08)    
-#define CAN_TECR_TEC4     ((uint8_t)0x10)    
-#define CAN_TECR_TEC5     ((uint8_t)0x20)    
-#define CAN_TECR_TEC6     ((uint8_t)0x40)    
-#define CAN_TECR_TEC7     ((uint8_t)0x80)    
+#define CAN_TECR_TEC0     ((uint8_t)0x01)
+#define CAN_TECR_TEC1     ((uint8_t)0x02)
+#define CAN_TECR_TEC2     ((uint8_t)0x04)
+#define CAN_TECR_TEC3     ((uint8_t)0x08)
+#define CAN_TECR_TEC4     ((uint8_t)0x10)
+#define CAN_TECR_TEC5     ((uint8_t)0x20)
+#define CAN_TECR_TEC6     ((uint8_t)0x40)
+#define CAN_TECR_TEC7     ((uint8_t)0x80)
 
 /* CAN RECEIVE error counter Register bits(CAN_TECR) */
-#define CAN_RECR_REC0     ((uint8_t)0x01)    
-#define CAN_RECR_REC1     ((uint8_t)0x02)    
-#define CAN_RECR_REC2     ((uint8_t)0x04)    
-#define CAN_RECR_REC3     ((uint8_t)0x08)    
-#define CAN_RECR_REC4     ((uint8_t)0x10)    
-#define CAN_RECR_REC5     ((uint8_t)0x20)    
-#define CAN_RECR_REC6     ((uint8_t)0x40)    
-#define CAN_RECR_REC7     ((uint8_t)0x80)    
+#define CAN_RECR_REC0     ((uint8_t)0x01)
+#define CAN_RECR_REC1     ((uint8_t)0x02)
+#define CAN_RECR_REC2     ((uint8_t)0x04)
+#define CAN_RECR_REC3     ((uint8_t)0x08)
+#define CAN_RECR_REC4     ((uint8_t)0x10)
+#define CAN_RECR_REC5     ((uint8_t)0x20)
+#define CAN_RECR_REC6     ((uint8_t)0x40)
+#define CAN_RECR_REC7     ((uint8_t)0x80)
 
 /* CAN filter mode register bits (CAN_FMR) */
-#define CAN_FMR1_FML0     ((uint8_t)0x01)    
-#define CAN_FMR1_FMH0     ((uint8_t)0x02)    
-#define CAN_FMR1_FML1     ((uint8_t)0x04)    
-#define CAN_FMR1_FMH1     ((uint8_t)0x08)    
-#define CAN_FMR1_FML2     ((uint8_t)0x10)    
-#define CAN_FMR1_FMH2     ((uint8_t)0x20)    
-#define CAN_FMR1_FML3     ((uint8_t)0x40)    
-#define CAN_FMR1_FMH3     ((uint8_t)0x80)    
+#define CAN_FMR1_FML0     ((uint8_t)0x01)
+#define CAN_FMR1_FMH0     ((uint8_t)0x02)
+#define CAN_FMR1_FML1     ((uint8_t)0x04)
+#define CAN_FMR1_FMH1     ((uint8_t)0x08)
+#define CAN_FMR1_FML2     ((uint8_t)0x10)
+#define CAN_FMR1_FMH2     ((uint8_t)0x20)
+#define CAN_FMR1_FML3     ((uint8_t)0x40)
+#define CAN_FMR1_FMH3     ((uint8_t)0x80)
 
-#define CAN_FMR2_FML4     ((uint8_t)0x01)    
-#define CAN_FMR2_FMH4     ((uint8_t)0x02)    
-#define CAN_FMR2_FML5     ((uint8_t)0x04)    
-#define CAN_FMR2_FMH5     ((uint8_t)0x08)    
+#define CAN_FMR2_FML4     ((uint8_t)0x01)
+#define CAN_FMR2_FMH4     ((uint8_t)0x02)
+#define CAN_FMR2_FML5     ((uint8_t)0x04)
+#define CAN_FMR2_FMH5     ((uint8_t)0x08)
 
 /* CAN filter Config register bits (CAN_FCR) */
-#define CAN_FCR1_FACT0     ((uint8_t)0x01)    
-#define CAN_FCR1_FACT1     ((uint8_t)0x10)    
-#define CAN_FCR2_FACT2     ((uint8_t)0x01)    
-#define CAN_FCR2_FACT3     ((uint8_t)0x10)    
-#define CAN_FCR3_FACT4     ((uint8_t)0x01)    
-#define CAN_FCR3_FACT5     ((uint8_t)0x10)    
+#define CAN_FCR1_FACT0     ((uint8_t)0x01)
+#define CAN_FCR1_FACT1     ((uint8_t)0x10)
+#define CAN_FCR2_FACT2     ((uint8_t)0x01)
+#define CAN_FCR2_FACT3     ((uint8_t)0x10)
+#define CAN_FCR3_FACT4     ((uint8_t)0x01)
+#define CAN_FCR3_FACT5     ((uint8_t)0x10)
 
-#define CAN_FCR1_FSC00     ((uint8_t)0x02)    
-#define CAN_FCR1_FSC01     ((uint8_t)0x04)    
-#define CAN_FCR1_FSC10     ((uint8_t)0x20)    
-#define CAN_FCR1_FSC11     ((uint8_t)0x40)    
-#define CAN_FCR2_FSC20     ((uint8_t)0x02)    
-#define CAN_FCR2_FSC21     ((uint8_t)0x04)    
-#define CAN_FCR2_FSC30     ((uint8_t)0x20)    
-#define CAN_FCR2_FSC31     ((uint8_t)0x40)    
-#define CAN_FCR3_FSC40     ((uint8_t)0x02)    
-#define CAN_FCR3_FSC41     ((uint8_t)0x04)    
-#define CAN_FCR3_FSC50     ((uint8_t)0x20)    
+#define CAN_FCR1_FSC00     ((uint8_t)0x02)
+#define CAN_FCR1_FSC01     ((uint8_t)0x04)
+#define CAN_FCR1_FSC10     ((uint8_t)0x20)
+#define CAN_FCR1_FSC11     ((uint8_t)0x40)
+#define CAN_FCR2_FSC20     ((uint8_t)0x02)
+#define CAN_FCR2_FSC21     ((uint8_t)0x04)
+#define CAN_FCR2_FSC30     ((uint8_t)0x20)
+#define CAN_FCR2_FSC31     ((uint8_t)0x40)
+#define CAN_FCR3_FSC40     ((uint8_t)0x02)
+#define CAN_FCR3_FSC41     ((uint8_t)0x04)
+#define CAN_FCR3_FSC50     ((uint8_t)0x20)
 #define CAN_FCR3_FSC51     ((uint8_t)0x40)
 
 /**
@@ -2521,9 +2527,9 @@ typedef struct
 
 typedef struct CFG_struct
 {
-  __IO uint8_t GCR; /*!< Global Configuration register */
+    __IO uint8_t GCR; /*!< Global Configuration register */
 }
-CFG_TypeDef;
+        CFG_TypeDef;
 
 /** @addtogroup CFG_Registers_Reset_Value
   * @{
@@ -2600,7 +2606,7 @@ CFG_TypeDef;
 
 #if defined(STM8S105) || defined(STM8S005) || defined(STM8S103) || defined(STM8S003) || \
     defined(STM8S001) || defined(STM8S903) || defined(STM8AF626x) || defined(STM8AF622x)
- #define ADC1 ((ADC1_TypeDef *) ADC1_BaseAddress)
+#define ADC1 ((ADC1_TypeDef *) ADC1_BaseAddress)
 #endif /* (STM8S105)||(STM8S103)||(STM8S005)||(STM8S003)||(STM8S001)||(STM8S903)||(STM8AF626x)||(STM8AF622x)*/
 
 #if defined(STM8S208) || defined(STM8S207) || defined (STM8S007) || defined (STM8AF52Ax) || \
@@ -2613,7 +2619,7 @@ CFG_TypeDef;
 #define BEEP ((BEEP_TypeDef *) BEEP_BaseAddress)
 
 #if defined (STM8S208) || defined (STM8AF52Ax)
- #define CAN ((CAN_TypeDef *) CAN_BaseAddress)
+#define CAN ((CAN_TypeDef *) CAN_BaseAddress)
 #endif /* (STM8S208) || (STM8AF52Ax) */
 
 #define CLK ((CLK_TypeDef *) CLK_BaseAddress)
@@ -2638,12 +2644,12 @@ CFG_TypeDef;
 
 #if defined(STM8S207) || defined (STM8S007) || defined(STM8S208) || defined(STM8S105) || \
     defined(STM8S005) || defined (STM8AF52Ax) || defined (STM8AF62Ax) || defined (STM8AF626x)
- #define GPIOG ((GPIO_TypeDef *) GPIOG_BaseAddress)
+#define GPIOG ((GPIO_TypeDef *) GPIOG_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207)  || (STM8S105) || (STM8AF52Ax) || (STM8AF62Ax) || (STM8AF626x) */
 
 #if defined(STM8S207) || defined (STM8S007) || defined(STM8S208) || defined (STM8AF52Ax) || \
     defined (STM8AF62Ax)
- #define GPIOH ((GPIO_TypeDef *) GPIOH_BaseAddress)
+#define GPIOH ((GPIO_TypeDef *) GPIOH_BaseAddress)
  #define GPIOI ((GPIO_TypeDef *) GPIOI_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207) || (STM8AF62Ax) || (STM8AF52Ax) */
 
@@ -2657,20 +2663,20 @@ CFG_TypeDef;
 
 #if defined(STM8S208) || defined(STM8S207) || defined (STM8S007) || defined(STM8S103) || \
     defined(STM8S003) || defined(STM8S001) || defined(STM8S903) || defined (STM8AF52Ax) || defined (STM8AF62Ax)
- #define UART1 ((UART1_TypeDef *) UART1_BaseAddress)
+#define UART1 ((UART1_TypeDef *) UART1_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207)  || (STM8S103) || (STM8S001) || (STM8S903) || (STM8AF52Ax) || (STM8AF62Ax) */
 
 #if defined (STM8S105) || defined (STM8S005) || defined (STM8AF626x)
- #define UART2 ((UART2_TypeDef *) UART2_BaseAddress)
+#define UART2 ((UART2_TypeDef *) UART2_BaseAddress)
 #endif /* STM8S105 || STM8S005 || STM8AF626x */
 
 #if defined(STM8S208) ||defined(STM8S207) || defined (STM8S007) || defined (STM8AF52Ax) || \
     defined (STM8AF62Ax)
- #define UART3 ((UART3_TypeDef *) UART3_BaseAddress)
+#define UART3 ((UART3_TypeDef *) UART3_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207) || (STM8AF62Ax) || (STM8AF52Ax) */
 
 #if defined(STM8AF622x)
- #define UART4 ((UART4_TypeDef *) UART4_BaseAddress)
+#define UART4 ((UART4_TypeDef *) UART4_BaseAddress)
 #endif /* (STM8AF622x) */
 
 #define TIM1 ((TIM1_TypeDef *) TIM1_BaseAddress)
@@ -2678,24 +2684,24 @@ CFG_TypeDef;
 #if defined(STM8S208) || defined(STM8S207) || defined (STM8S007) || defined(STM8S103) || \
     defined(STM8S003) || defined(STM8S001) || defined(STM8S105) || defined(STM8S005) || defined (STM8AF52Ax) || \
     defined (STM8AF62Ax) || defined (STM8AF626x)
- #define TIM2 ((TIM2_TypeDef *) TIM2_BaseAddress)
+#define TIM2 ((TIM2_TypeDef *) TIM2_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207)  || (STM8S103) || (STM8S001) || (STM8S105) || (STM8AF52Ax) || (STM8AF62Ax) || (STM8AF626x)*/
 
 #if defined(STM8S208) || defined(STM8S207) || defined (STM8S007) || defined(STM8S105) || \
     defined(STM8S005) || defined (STM8AF52Ax) || defined (STM8AF62Ax) || defined (STM8AF626x)
- #define TIM3 ((TIM3_TypeDef *) TIM3_BaseAddress)
+#define TIM3 ((TIM3_TypeDef *) TIM3_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207)  || (STM8S105) || (STM8AF62Ax) || (STM8AF52Ax) || (STM8AF626x)*/
 
 #if defined(STM8S208) ||defined(STM8S207) || defined (STM8S007) || defined(STM8S103) || \
     defined(STM8S003) || defined(STM8S001) || defined(STM8S105) || defined(STM8S005) || defined (STM8AF52Ax) || \
     defined (STM8AF62Ax) || defined (STM8AF626x)
- #define TIM4 ((TIM4_TypeDef *) TIM4_BaseAddress)
+#define TIM4 ((TIM4_TypeDef *) TIM4_BaseAddress)
 #endif /* (STM8S208) ||(STM8S207)  || (STM8S103) || (STM8S001) || (STM8S105) || (STM8AF52Ax) || (STM8AF62Ax) || (STM8AF626x)*/
 
 #if defined (STM8S903) || defined (STM8AF622x)
- #define TIM5 ((TIM5_TypeDef *) TIM5_BaseAddress)
+#define TIM5 ((TIM5_TypeDef *) TIM5_BaseAddress)
  #define TIM6 ((TIM6_TypeDef *) TIM6_BaseAddress)
-#endif /* (STM8S903) || (STM8AF622x) */ 
+#endif /* (STM8S903) || (STM8AF622x) */
 
 #define ITC ((ITC_TypeDef *) ITC_BaseAddress)
 
@@ -2705,14 +2711,14 @@ CFG_TypeDef;
 
 
 #ifdef USE_STDPERIPH_DRIVER
- #include "stm8s_conf.h"
+#include "stm8s_conf.h"
 #endif
 
 /* Exported macro --------------------------------------------------------------*/
 
 /*============================== Interrupts ====================================*/
 #ifdef _RAISONANCE_
- #include <intrins.h>
+#include <intrins.h>
  #define enableInterrupts()    _rim_()  /* enable interrupts */
  #define disableInterrupts()   _sim_()  /* disable interrupts */
  #define rim()                 _rim_()  /* enable interrupts */
@@ -2722,7 +2728,7 @@ CFG_TypeDef;
  #define wfi()                 _wfi_()  /* Wait For Interrupt */
  #define halt()                _halt_() /* Halt */
 #elif defined(_COSMIC_)
- #define enableInterrupts()    {_asm("rim\n");}  /* enable interrupts */
+#define enableInterrupts()    {_asm("rim\n");}  /* enable interrupts */
  #define disableInterrupts()   {_asm("sim\n");}  /* disable interrupts */
  #define rim()                 {_asm("rim\n");}  /* enable interrupts */
  #define sim()                 {_asm("sim\n");}  /* disable interrupts */
@@ -2730,8 +2736,8 @@ CFG_TypeDef;
  #define trap()                {_asm("trap\n");} /* Trap (soft IT) */
  #define wfi()                 {_asm("wfi\n");}  /* Wait For Interrupt */
  #define halt()                {_asm("halt\n");} /* Halt */
-#else /*_IAR_*/
- #include <intrinsics.h>
+#elif defined(_IAR_)
+#include <intrinsics.h>
  #define enableInterrupts()    __enable_interrupt()   /* enable interrupts */
  #define disableInterrupts()   __disable_interrupt()  /* disable interrupts */
  #define rim()                 __enable_interrupt()   /* enable interrupts */
@@ -2740,36 +2746,74 @@ CFG_TypeDef;
  #define trap()                __trap()               /* Trap (soft IT) */
  #define wfi()                 __wait_for_interrupt() /* Wait For Interrupt */
  #define halt()                __halt()               /* Halt */
+#elif defined(_SDCC_)
+#define enableInterrupts() \
+  do { \
+   __asm__("rim"); \
+  } while (0) /* enable interrupts */
+ #define disableInterrupts() \
+  do { \
+   __asm__("sim"); \
+  } while (0) /* disable interrupts */
+ #define rim() \
+  do { \
+   __asm__("rim"); \
+  } while (0) /* enable interrupts */
+ #define sim() \
+  do { \
+   __asm__("sim"); \
+  } while (0) /* disable interrupts */
+ #define nop() \
+  do { \
+   __asm__("nop"); \
+  } while (0) /* No Operation */
+ #define trap() \
+  do { \
+   __asm__("trap"); \
+  } while (0) /* Trap (soft IT) */
+ #define wfi() \
+  do { \
+   __asm__("wfi"); \
+  } while (0) /* Wait For Interrupt */
+ #define halt() \
+  do { \
+   __asm__("halt"); \
+  } while (0) /* Halt */
 #endif /*_RAISONANCE_*/
 
 /*============================== Interrupt vector Handling ========================*/
 
 #ifdef _COSMIC_
- #define INTERRUPT_HANDLER(a,b) @far @interrupt void a(void)
+#define INTERRUPT_HANDLER(a,b) @far @interrupt void a(void)
  #define INTERRUPT_HANDLER_TRAP(a) void @far @interrupt a(void)
 #endif /* _COSMIC_ */
 
 #ifdef _RAISONANCE_
- #define INTERRUPT_HANDLER(a,b) void a(void) interrupt b
+#define INTERRUPT_HANDLER(a,b) void a(void) interrupt b
  #define INTERRUPT_HANDLER_TRAP(a) void a(void) trap
 #endif /* _RAISONANCE_ */
 
 #ifdef _IAR_
- #define STRINGVECTOR(x) #x
+#define STRINGVECTOR(x) #x
  #define VECTOR_ID(x) STRINGVECTOR( vector = (x) )
  #define INTERRUPT_HANDLER( a, b )  \
  _Pragma( VECTOR_ID( (b)+2 ) )        \
  __interrupt void (a)( void )
  #define INTERRUPT_HANDLER_TRAP(a) \
  _Pragma( VECTOR_ID( 1 ) ) \
- __interrupt void (a) (void)  
+ __interrupt void (a) (void)
 #endif /* _IAR_ */
+
+#ifdef _SDCC_
+#define INTERRUPT_HANDLER(a,b) void a() __interrupt(b)
+ #define INTERRUPT_HANDLER_TRAP(a) void a() __trap
+#endif /* _SDCC_ */
 
 /*============================== Interrupt Handler declaration ========================*/
 #ifdef _COSMIC_
- #define INTERRUPT @far @interrupt
+#define INTERRUPT @far @interrupt
 #elif defined(_IAR_)
- #define INTERRUPT __interrupt
+#define INTERRUPT __interrupt
 #endif /* _COSMIC_ */
 
 /*============================== Handling bits ====================================*/
