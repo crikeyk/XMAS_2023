@@ -4,43 +4,75 @@
  */
 
 #include "stm8s.h"
-#include "stm8s_gpio.h"
-#include "clock.h"
-#include "uart.h"
-#include "timer.h"
-#include "ws2812.h"
+void delay_ms(uint16_t ms) {
+    while (ms--) {
+        // Assuming a 16 MHz clock
+				uint16_t i;
+        for (i = 2000; i != 0; --i) {
+            _asm("nop"); // Perform a no-operation to introduce a delay
+        }
+    }
+}
 
+void ws_write_byte(uint8_t byte)
+{
+	uint8_t mask;
+    for (mask = 0x80; mask != 0; mask >>= 1) {
+        if ((byte & mask) != 0) {
+            // Set pin high
+            _asm("bset 20480, #4");
 
-void main() {
-	
-	u16 hue;
-	u8 index;
-	
-    clock_init();
-    ws2812_init();
-		
-		hue = 0;
-    index = 0;
+            // Delay for 850ns minus overheads
+            nop(); nop(); nop(); nop();
+            nop(); nop(); nop(); nop();
 
-    // Trigger GPIO
-    GPIOA->DDR |= (1 << 1);
-    GPIOA->CR1 |= (1 << 1);
-    GPIOA->CR2 |= (1 << 1);
+            // Set pin low
+            _asm("bres 20480, #4");
 
+            // Delay 400ns minus overhead
+            nop(); nop(); nop(); nop();
+
+        } else {
+            // Set pin high
+            _asm("bset 20480, #4");
+
+            // Delay for 400ns minus overheads
+            nop(); nop(); nop(); nop();
+            nop(); nop();
+
+            // Set pin low
+            _asm("bres 20480, #4");
+
+            // Delay for 850ns minus overheads
+            nop(); nop(); nop(); nop();
+
+        }
+    }
+}
+
+int main(void) {
+    // Initialize system clock
+    CLK_DeInit();
+    CLK_HSECmd(DISABLE);
+    CLK_HSICmd(ENABLE);
+    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8);
+    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+
+    // Initialize GPIO for pin D4
+    GPIO_DeInit(GPIOA);
+    GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
+		GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
 
     while (1) {
-        GPIOA->ODR ^= (1 << 1);
-        ws2812_set_color_hsl((u8)(index - 3) % 28, 0, 0, 0);
-        ws2812_set_color_hsl(index, hue, 255, 50);
-        hue++;
-        index++;
-        if (hue > 767) {
-            hue = 0;
-        }
-        if (index > 28) {
-            index = 0;
-        }
-        ws2812_write_frame();
-        delay(150);
+        //GPIO_WriteReverse(GPIOA, GPIO_PIN_1);
+				//GPIO_WriteReverse(GPIOA, GPIO_PIN_2);
+
+        //nop(); nop(); nop(); nop();
+				//nop(); nop(); nop(); nop();
+				
+				ws_write_byte(0xAA);
+				ws_write_byte(0x00);
+				ws_write_byte(0xAA);
+				
     }
 }
