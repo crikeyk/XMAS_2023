@@ -500,7 +500,7 @@
 1467                     ; 195 	uint8_t red = 0;
 1469                     ; 196 	uint8_t green = 0;
 1471                     ; 197 	uint8_t blue = 0;
-1473                     ; 198 	float scale = 0.5;
+1473                     ; 198 	float scale = 0.15;
 1475  0236 ce0002        	ldw	x,L715+2
 1476  0239 1f0a          	ldw	(OFST-2,sp),x
 1477  023b ce0000        	ldw	x,L715
@@ -543,116 +543,102 @@
 1530  0285 cd0000        	call	c_ftol
 1532  0288 b603          	ld	a,c_lreg+3
 1533  028a b701          	ld	L75_colour+1,a
-1534                     ; 203 		colour[2] = linearSine(hue+128)*scale;
+1534                     ; 203 		colour[2] = linearSine(hue+128);
 1536  028c 7b0c          	ld	a,(OFST+0,sp)
 1537  028e ab80          	add	a,#128
 1538  0290 cd0210        	call	_linearSine
-1540  0293 5f            	clrw	x
-1541  0294 97            	ld	xl,a
-1542  0295 cd0000        	call	c_itof
-1544  0298 96            	ldw	x,sp
-1545  0299 1c0001        	addw	x,#OFST-11
-1546  029c cd0000        	call	c_rtol
-1549  029f 96            	ldw	x,sp
-1550  02a0 1c0008        	addw	x,#OFST-4
-1551  02a3 cd0000        	call	c_ltor
-1553  02a6 96            	ldw	x,sp
-1554  02a7 1c0001        	addw	x,#OFST-11
-1555  02aa cd0000        	call	c_fmul
-1557  02ad cd0000        	call	c_ftol
-1559  02b0 b603          	ld	a,c_lreg+3
-1560  02b2 b702          	ld	L75_colour+2,a
-1561                     ; 205 		clear_lights();
-1563  02b4 cd010c        	call	_clear_lights
-1565                     ; 206 		setAllSameColour(colour); 
-1567  02b7 ae0000        	ldw	x,#L75_colour
-1568  02ba cd0132        	call	_setAllSameColour
-1570                     ; 207 		write_display(lights);
-1572  02bd ae0000        	ldw	x,#L55_lights
-1573  02c0 cd00d3        	call	_write_display
-1575                     ; 209 		hue++;
-1577  02c3 0c0c          	inc	(OFST+0,sp)
-1579                     ; 211 		delay_ms(50);
-1581  02c5 ae0032        	ldw	x,#50
-1582  02c8 cd0000        	call	_delay_ms
-1585  02cb ac400240      	jpf	L325
-1617                     ; 219 int main(void) {
-1618                     	switch	.text
-1619  02cf               _main:
-1623                     ; 221 	CLK_DeInit();
-1625  02cf cd0000        	call	_CLK_DeInit
-1627                     ; 222 	CLK_HSECmd(DISABLE);
-1629  02d2 4f            	clr	a
-1630  02d3 cd0000        	call	_CLK_HSECmd
-1632                     ; 223 	CLK_HSICmd(ENABLE);
-1634  02d6 a601          	ld	a,#1
-1635  02d8 cd0000        	call	_CLK_HSICmd
-1637                     ; 224 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-1639  02db 4f            	clr	a
-1640  02dc cd0000        	call	_CLK_HSIPrescalerConfig
-1642                     ; 225 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-1644  02df a680          	ld	a,#128
-1645  02e1 cd0000        	call	_CLK_SYSCLKConfig
-1647                     ; 228 	GPIO_DeInit(GPIOA);
-1649  02e4 ae5000        	ldw	x,#20480
-1650  02e7 cd0000        	call	_GPIO_DeInit
-1652                     ; 229 	GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
-1654  02ea 4be0          	push	#224
-1655  02ec 4b02          	push	#2
-1656  02ee ae5000        	ldw	x,#20480
-1657  02f1 cd0000        	call	_GPIO_Init
-1659  02f4 85            	popw	x
-1660                     ; 230 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
-1662  02f5 4be0          	push	#224
-1663  02f7 4b04          	push	#4
-1664  02f9 ae5000        	ldw	x,#20480
-1665  02fc cd0000        	call	_GPIO_Init
-1667  02ff 85            	popw	x
-1668                     ; 232 	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_NO_IT);
-1670  0300 4b00          	push	#0
-1671  0302 4b10          	push	#16
-1672  0304 ae5005        	ldw	x,#20485
-1673  0307 cd0000        	call	_GPIO_Init
-1675  030a 85            	popw	x
-1676                     ; 235 	clear_lights();
-1678  030b cd010c        	call	_clear_lights
-1680  030e               L735:
-1681                     ; 238 		rainbowFade();
-1683  030e cd0232        	call	_rainbowFade
-1686  0311 20fb          	jra	L735
-1722                     	xdef	_main
-1723                     	xdef	_rainbowFade
-1724                     	xdef	_linearSine
-1725                     	xdef	_RGBSpin
-1726                     	xdef	_setAllSameColour
-1727                     	xdef	_clear_lights
-1728                     	xdef	_write_display
-1729                     	xdef	_ws_write_grb_bot
-1730                     	xdef	_ws_write_grb_top
-1731                     	xdef	_ws_write_byte_bot
-1732                     	xdef	_ws_write_byte_top
-1733                     	switch	.ubsct
-1734  0000               L55_lights:
-1735  0000 000000000000  	ds.b	24
-1736                     	xdef	_delay_ms
-1737                     	xref	_GPIO_ReadInputPin
-1738                     	xref	_GPIO_Init
-1739                     	xref	_GPIO_DeInit
-1740                     	xref	_CLK_SYSCLKConfig
-1741                     	xref	_CLK_HSIPrescalerConfig
-1742                     	xref	_CLK_HSICmd
-1743                     	xref	_CLK_HSECmd
-1744                     	xref	_CLK_DeInit
-1745                     .const:	section	.text
-1746  0000               L715:
-1747  0000 3f000000      	dc.w	16128,0
-1748                     	xref.b	c_lreg
-1749                     	xref.b	c_x
-1769                     	xref	c_ftol
-1770                     	xref	c_fmul
-1771                     	xref	c_rtol
-1772                     	xref	c_itof
-1773                     	xref	c_ltor
-1774                     	xref	c_idiv
-1775                     	xref	c_bmulx
-1776                     	end
+1540  0293 b702          	ld	L75_colour+2,a
+1541                     ; 205 		clear_lights();
+1543  0295 cd010c        	call	_clear_lights
+1545                     ; 206 		setAllSameColour(colour); 
+1547  0298 ae0000        	ldw	x,#L75_colour
+1548  029b cd0132        	call	_setAllSameColour
+1550                     ; 207 		write_display(lights);
+1552  029e ae0000        	ldw	x,#L55_lights
+1553  02a1 cd00d3        	call	_write_display
+1555                     ; 209 		hue++;
+1557  02a4 0c0c          	inc	(OFST+0,sp)
+1559                     ; 211 		delay_ms(50);
+1561  02a6 ae0032        	ldw	x,#50
+1562  02a9 cd0000        	call	_delay_ms
+1565  02ac 2092          	jra	L325
+1597                     ; 219 int main(void) {
+1598                     	switch	.text
+1599  02ae               _main:
+1603                     ; 221 	CLK_DeInit();
+1605  02ae cd0000        	call	_CLK_DeInit
+1607                     ; 222 	CLK_HSECmd(DISABLE);
+1609  02b1 4f            	clr	a
+1610  02b2 cd0000        	call	_CLK_HSECmd
+1612                     ; 223 	CLK_HSICmd(ENABLE);
+1614  02b5 a601          	ld	a,#1
+1615  02b7 cd0000        	call	_CLK_HSICmd
+1617                     ; 224 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+1619  02ba 4f            	clr	a
+1620  02bb cd0000        	call	_CLK_HSIPrescalerConfig
+1622                     ; 225 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+1624  02be a680          	ld	a,#128
+1625  02c0 cd0000        	call	_CLK_SYSCLKConfig
+1627                     ; 228 	GPIO_DeInit(GPIOA);
+1629  02c3 ae5000        	ldw	x,#20480
+1630  02c6 cd0000        	call	_GPIO_DeInit
+1632                     ; 229 	GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
+1634  02c9 4be0          	push	#224
+1635  02cb 4b02          	push	#2
+1636  02cd ae5000        	ldw	x,#20480
+1637  02d0 cd0000        	call	_GPIO_Init
+1639  02d3 85            	popw	x
+1640                     ; 230 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
+1642  02d4 4be0          	push	#224
+1643  02d6 4b04          	push	#4
+1644  02d8 ae5000        	ldw	x,#20480
+1645  02db cd0000        	call	_GPIO_Init
+1647  02de 85            	popw	x
+1648                     ; 232 	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_NO_IT);
+1650  02df 4b00          	push	#0
+1651  02e1 4b10          	push	#16
+1652  02e3 ae5005        	ldw	x,#20485
+1653  02e6 cd0000        	call	_GPIO_Init
+1655  02e9 85            	popw	x
+1656                     ; 235 	clear_lights();
+1658  02ea cd010c        	call	_clear_lights
+1660  02ed               L735:
+1661                     ; 238 		RGBSpin();
+1663  02ed cd0165        	call	_RGBSpin
+1666  02f0 20fb          	jra	L735
+1702                     	xdef	_main
+1703                     	xdef	_rainbowFade
+1704                     	xdef	_linearSine
+1705                     	xdef	_RGBSpin
+1706                     	xdef	_setAllSameColour
+1707                     	xdef	_clear_lights
+1708                     	xdef	_write_display
+1709                     	xdef	_ws_write_grb_bot
+1710                     	xdef	_ws_write_grb_top
+1711                     	xdef	_ws_write_byte_bot
+1712                     	xdef	_ws_write_byte_top
+1713                     	switch	.ubsct
+1714  0000               L55_lights:
+1715  0000 000000000000  	ds.b	24
+1716                     	xdef	_delay_ms
+1717                     	xref	_GPIO_ReadInputPin
+1718                     	xref	_GPIO_Init
+1719                     	xref	_GPIO_DeInit
+1720                     	xref	_CLK_SYSCLKConfig
+1721                     	xref	_CLK_HSIPrescalerConfig
+1722                     	xref	_CLK_HSICmd
+1723                     	xref	_CLK_HSECmd
+1724                     	xref	_CLK_DeInit
+1725                     .const:	section	.text
+1726  0000               L715:
+1727  0000 3e199999      	dc.w	15897,-26215
+1728                     	xref.b	c_lreg
+1729                     	xref.b	c_x
+1749                     	xref	c_ftol
+1750                     	xref	c_fmul
+1751                     	xref	c_rtol
+1752                     	xref	c_itof
+1753                     	xref	c_ltor
+1754                     	xref	c_idiv
+1755                     	xref	c_bmulx
+1756                     	end

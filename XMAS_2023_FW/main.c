@@ -195,12 +195,12 @@ void rainbowFade(void)
 	uint8_t red = 0;
 	uint8_t green = 0;
 	uint8_t blue = 0;
-	float scale = 0.5;
+	float scale = 0.15;
 	while(1){
 		
 		colour[0] = linearSine(hue)*scale;
 		colour[1] = linearSine(hue-128)*scale;
-		colour[2] = linearSine(hue+128)*scale;
+		colour[2] = linearSine(hue+128);
 		
 		clear_lights();
 		setAllSameColour(colour); 
@@ -235,7 +235,7 @@ int main(void) {
 	clear_lights();
 
 	while(1){
-		rainbowFade();
+		RGBSpin();
 	}
 	
     
