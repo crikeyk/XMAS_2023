@@ -8,6 +8,8 @@
 #define CW 1
 #define CCW -1
 
+#define MAX_BRIGHTNESS 20
+
 
 
 void delay_ms(uint16_t ms)
@@ -158,7 +160,7 @@ void RGBSpin(void)
 	
 	while (1) {
 		clear_lights();
-		lights[i][j] = 20;
+		lights[i][j] = MAX_BRIGHTNESS;
 		write_display(lights);
 					
 		i += dir;
@@ -195,12 +197,12 @@ void rainbowFade(void)
 	uint8_t red = 0;
 	uint8_t green = 0;
 	uint8_t blue = 0;
-	float scale = 0.15;
+	float scale = MAX_BRIGHTNESS*1.0/256;
 	while(1){
 		
 		colour[0] = linearSine(hue)*scale;
 		colour[1] = linearSine(hue-128)*scale;
-		colour[2] = linearSine(hue+128);
+		colour[2] = linearSine(hue+128)*scale;
 		
 		clear_lights();
 		setAllSameColour(colour); 
@@ -229,13 +231,15 @@ int main(void) {
 	GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
 	
-	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);
+	
+	
 
 // Initialise lights array
 	clear_lights();
 
 	while(1){
-		RGBSpin();
+		rainbowFade();
 	}
 	
     
