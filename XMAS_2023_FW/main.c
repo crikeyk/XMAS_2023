@@ -150,12 +150,13 @@ void setAllSameColour(uint8_t* colour){
 	 }
 }
 
+volatile int8_t dir = CW;
+
 void RGBSpin(void)
 {
 	
 	int8_t j = 0;
 	int8_t i = 0;
-	int8_t dir = CW;
 	uint8_t press = 0;
 	
 	while (1) {
@@ -172,13 +173,38 @@ void RGBSpin(void)
 			j %= NUM_COLOURS;
 		}
 		
-		delay_ms(50);
-		press = GPIO_ReadInputPin(GPIOB, GPIO_PIN_4);
+		delay_ms(100);
+		/*press = GPIO_ReadInputPin(GPIOB, GPIO_PIN_4);
 		delay_ms(50);
 		if(GPIO_ReadInputPin(GPIOB, GPIO_PIN_4) && press){
 			dir = (dir==CW) ? CCW : CW;
 		}
-		press = 0;
+		press = 0;*/
+	}
+}
+
+void RGBSpin_no_button(void)
+{
+	
+	int8_t j = 0;
+	int8_t i = 0;
+	int8_t dir = CW;
+	
+	while (1) {
+		clear_lights();
+		lights[i][j] = MAX_BRIGHTNESS;
+		write_display(lights);
+					
+		i += dir;
+		i = (i==-1) ? NUM_LEDS-1 : i;
+		i %= NUM_LEDS;
+		
+		if(i==0){
+			j += 1;
+			j %= NUM_COLOURS;
+		}
+		
+		delay_ms(100);
 	}
 }
 
@@ -190,6 +216,8 @@ uint8_t linearSine(uint8_t val){
 		return(256 - val);
 	}
 }	
+
+
 
 void rainbowFade(void)
 {
@@ -220,6 +248,8 @@ void rainbowFade(void)
 
 int main(void) {
 	// Initialize system clock
+	
+	sim();
 	CLK_DeInit();
 	CLK_HSECmd(DISABLE);
 	CLK_HSICmd(ENABLE);
@@ -232,15 +262,24 @@ int main(void) {
 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
 	
 	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);
+	EXTI->CR1 &= ~(1 << 3);
+	EXTI->CR1 |= (1 << 2);
 	
-	
-
 // Initialise lights array
 	clear_lights();
+	
+	rim();
 
 	while(1){
-		rainbowFade();
+		RGBSpin();
 	}
 	
     
+}
+
+@far @interrupt void buttonHandler(void)
+{
+	dir = (dir==CW) ? CCW : CW;
+	//halt();
+	
 }
