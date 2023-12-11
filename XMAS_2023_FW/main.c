@@ -8,11 +8,14 @@
 #define CW 1
 #define CCW -1
 
-#define MAX_BRIGHTNESS 20
+#define MAX_BRIGHTNESS 30  // out of 256
 
 
+volatile int8_t dir = CW;
+volatile bool change = FALSE;
 
-void delay_ms(uint16_t ms)
+
+void delay_ms_HS(uint16_t ms)
 {
 	uint16_t ms_count;
 	for (ms_count = 0; ms_count < ms; ++ms_count) {
@@ -20,6 +23,17 @@ void delay_ms(uint16_t ms)
 		for (ticks = 0; ticks < 1074; ++ticks) {
 			nop();
 		}
+	}
+}
+
+void delay_ms(uint16_t ms)
+{
+	uint16_t ms_count;
+	
+	uint16_t targ = ms * 0.4;
+	
+	for (ms_count = 0; ms_count < targ; ++ms_count) {
+		nop();
 	}
 }
 
@@ -120,6 +134,9 @@ void ws_write_grb_bot(uint8_t* colour)
 void write_display(uint8_t (*lights)[3])
 {
 	uint8_t i;
+	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); //2MHz
+	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1); // 15.625kHz
+
 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
 		ws_write_grb_top(lights[i]);
 	}
@@ -127,6 +144,8 @@ void write_display(uint8_t (*lights)[3])
 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
 		ws_write_grb_bot(lights[NUM_LEDS-i-1]);
 	}
+	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //2MHz
+	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV128); // 15.625kHz
 }
 
 void clear_lights(void)
@@ -150,47 +169,15 @@ void setAllSameColour(uint8_t* colour){
 	 }
 }
 
-volatile int8_t dir = CW;
-
 void RGBSpin(void)
 {
-	
+
 	int8_t j = 0;
 	int8_t i = 0;
 	uint8_t press = 0;
-	
-	while (1) {
-		clear_lights();
-		lights[i][j] = MAX_BRIGHTNESS;
-		write_display(lights);
-					
-		i += dir;
-		i = (i==-1) ? NUM_LEDS-1 : i;
-		i %= NUM_LEDS;
-		
-		if(i==0){
-			j += 1;
-			j %= NUM_COLOURS;
-		}
-		
-		delay_ms(100);
-		/*press = GPIO_ReadInputPin(GPIOB, GPIO_PIN_4);
-		delay_ms(50);
-		if(GPIO_ReadInputPin(GPIOB, GPIO_PIN_4) && press){
-			dir = (dir==CW) ? CCW : CW;
-		}
-		press = 0;*/
-	}
-}
 
-void RGBSpin_no_button(void)
-{
-	
-	int8_t j = 0;
-	int8_t i = 0;
-	int8_t dir = CW;
-	
-	while (1) {
+	change = FALSE;
+	while (!change) {
 		clear_lights();
 		lights[i][j] = MAX_BRIGHTNESS;
 		write_display(lights);
@@ -202,9 +189,8 @@ void RGBSpin_no_button(void)
 		if(i==0){
 			j += 1;
 			j %= NUM_COLOURS;
-		}
-		
-		delay_ms(100);
+		} 
+		delay_ms(125);
 	}
 }
 
@@ -217,8 +203,6 @@ uint8_t linearSine(uint8_t val){
 	}
 }	
 
-
-
 void rainbowFade(void)
 {
 	uint8_t hue = 0;
@@ -226,7 +210,10 @@ void rainbowFade(void)
 	uint8_t green = 0;
 	uint8_t blue = 0;
 	float scale = MAX_BRIGHTNESS*1.0/256;
-	while(1){
+
+
+	change = FALSE;
+	while(!change){
 		
 		colour[0] = linearSine(hue)*scale;
 		colour[1] = linearSine(hue-128)*scale;
@@ -236,15 +223,20 @@ void rainbowFade(void)
 		setAllSameColour(colour); 
 		write_display(lights);
 		
-		hue++;
+		hue += 5;
 		
 		delay_ms(50);
-
 	}
-	
 }
 
-
+void init_tim2(void){
+	
+	TIM2->PSCR |= 0x0E; // set prescaler to 16384 ~ 1kHz
+	TIM2->ARRH = 0x13;
+	TIM2->ARRL = 0x88; 
+	TIM2->IER |= 0x1; // generate interrupt
+	
+}
 
 int main(void) {
 	// Initialize system clock
@@ -253,8 +245,11 @@ int main(void) {
 	CLK_DeInit();
 	CLK_HSECmd(DISABLE);
 	CLK_HSICmd(ENABLE);
-	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+	//CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+	//CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+	
+	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //2MHz
+	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV128); // 15.625kHz
 
 	// Initialize GPIO for pin D4
 	GPIO_DeInit(GPIOA);
@@ -268,10 +263,20 @@ int main(void) {
 // Initialise lights array
 	clear_lights();
 	
+	init_tim2();
+			
+	//TIM2->CR1 |= 0x1; // enable counter
+	
 	rim();
 
 	while(1){
+		dir = CW;
 		RGBSpin();
+		
+		dir = CCW;
+		RGBSpin();
+		
+		rainbowFade();
 	}
 	
     
@@ -279,7 +284,20 @@ int main(void) {
 
 @far @interrupt void buttonHandler(void)
 {
-	dir = (dir==CW) ? CCW : CW;
+	//dir = (dir==CW) ? CCW : CW;
 	//halt();
+	change = TRUE;
+	
+}
+
+@far @interrupt void tim2Handler(void)
+{
+	TIM2->SR1 &= ~0x01; // clear status register
+	//TIM2->CR1 &= ~0x01; // disable counter
+	
+	clear_lights();
+	write_display(lights);
+	
+	halt();
 	
 }

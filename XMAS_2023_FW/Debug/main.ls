@@ -1,744 +1,777 @@
    1                     ; C Compiler for STM8 (COSMIC Software)
    2                     ; Parser V4.12.9 - 19 Apr 2023
    3                     ; Generator (Limited) V4.5.6 - 18 Jul 2023
-  72                     ; 15 void delay_ms(uint16_t ms)
-  72                     ; 16 {
-  74                     	switch	.text
-  75  0000               _delay_ms:
-  77  0000 89            	pushw	x
-  78  0001 5204          	subw	sp,#4
-  79       00000004      OFST:	set	4
-  82                     ; 18 	for (ms_count = 0; ms_count < ms; ++ms_count) {
-  84  0003 5f            	clrw	x
-  85  0004 1f03          	ldw	(OFST-1,sp),x
-  88  0006 2019          	jra	L34
-  89  0008               L73:
-  90                     ; 20 		for (ticks = 0; ticks < 1074; ++ticks) {
-  92  0008 5f            	clrw	x
-  93  0009 1f01          	ldw	(OFST-3,sp),x
-  95  000b               L74:
-  96                     ; 21 			nop();
-  99  000b 9d            nop
- 101                     ; 20 		for (ticks = 0; ticks < 1074; ++ticks) {
- 104  000c 1e01          	ldw	x,(OFST-3,sp)
- 105  000e 1c0001        	addw	x,#1
- 106  0011 1f01          	ldw	(OFST-3,sp),x
- 110  0013 1e01          	ldw	x,(OFST-3,sp)
- 111  0015 a30432        	cpw	x,#1074
- 112  0018 25f1          	jrult	L74
- 113                     ; 18 	for (ms_count = 0; ms_count < ms; ++ms_count) {
- 115  001a 1e03          	ldw	x,(OFST-1,sp)
- 116  001c 1c0001        	addw	x,#1
- 117  001f 1f03          	ldw	(OFST-1,sp),x
- 119  0021               L34:
- 122  0021 1e03          	ldw	x,(OFST-1,sp)
- 123  0023 1305          	cpw	x,(OFST+1,sp)
- 124  0025 25e1          	jrult	L73
- 125                     ; 24 }
- 128  0027 5b06          	addw	sp,#6
- 129  0029 81            	ret
- 132                     	bsct
- 133  0000               L75_colour:
- 134  0000 00            	dc.b	0
- 135  0001 00            	dc.b	0
- 136  0002 00            	dc.b	0
- 179                     ; 31 void ws_write_byte_top(uint8_t byte)
- 179                     ; 32 {
- 180                     	switch	.text
- 181  002a               _ws_write_byte_top:
- 183  002a 88            	push	a
- 184  002b 88            	push	a
- 185       00000001      OFST:	set	1
- 188                     ; 34     for (mask = 0x80; mask != 0; mask >>= 1) {
- 190  002c a680          	ld	a,#128
- 191  002e 6b01          	ld	(OFST+0,sp),a
- 193  0030               L301:
- 194                     ; 35         if ((byte & mask) != 0) {
- 196  0030 7b02          	ld	a,(OFST+1,sp)
- 197  0032 1501          	bcp	a,(OFST+0,sp)
- 198  0034 2716          	jreq	L111
- 199                     ; 37             _asm("bset 20480, #1");
- 202  0036 72125000      bset 20480, #1
- 204                     ; 40             nop(); nop(); nop(); nop();
- 207  003a 9d            nop
- 213  003b 9d            nop
- 219  003c 9d            nop
- 225  003d 9d            nop
- 227                     ; 41             nop(); nop(); nop(); nop();
- 231  003e 9d            nop
- 237  003f 9d            nop
- 243  0040 9d            nop
- 249  0041 9d            nop
- 251                     ; 42 						nop(); nop(); nop(); nop();
- 255  0042 9d            nop
- 261  0043 9d            nop
- 267  0044 9d            nop
- 273  0045 9d            nop
- 275                     ; 45             _asm("bres 20480, #1");
- 279  0046 72135000      bres 20480, #1
- 282  004a 2011          	jra	L311
- 283  004c               L111:
- 284                     ; 52             _asm("bset 20480, #1");
- 287  004c 72125000      bset 20480, #1
- 289                     ; 55             nop(); nop(); nop(); nop();
- 292  0050 9d            nop
- 298  0051 9d            nop
- 304  0052 9d            nop
- 310  0053 9d            nop
- 312                     ; 56 						nop(); nop();
- 316  0054 9d            nop
- 322  0055 9d            nop
- 324                     ; 59             _asm("bres 20480, #1");
- 328  0056 72135000      bres 20480, #1
- 330                     ; 62             nop(); nop(); nop();
- 333  005a 9d            nop
- 339  005b 9d            nop
- 345  005c 9d            nop
- 347  005d               L311:
- 348                     ; 34     for (mask = 0x80; mask != 0; mask >>= 1) {
- 350  005d 0401          	srl	(OFST+0,sp)
- 354  005f 0d01          	tnz	(OFST+0,sp)
- 355  0061 26cd          	jrne	L301
- 356                     ; 66 }
- 359  0063 85            	popw	x
- 360  0064 81            	ret
- 405                     ; 67 void ws_write_byte_bot(uint8_t byte)
- 405                     ; 68 {
- 406                     	switch	.text
- 407  0065               _ws_write_byte_bot:
- 409  0065 88            	push	a
- 410  0066 88            	push	a
- 411       00000001      OFST:	set	1
- 414                     ; 70     for (mask = 0x80; mask != 0; mask >>= 1) {
- 416  0067 a680          	ld	a,#128
- 417  0069 6b01          	ld	(OFST+0,sp),a
- 419  006b               L731:
- 420                     ; 71         if ((byte & mask) != 0) {
- 422  006b 7b02          	ld	a,(OFST+1,sp)
- 423  006d 1501          	bcp	a,(OFST+0,sp)
- 424  006f 2716          	jreq	L541
- 425                     ; 73             _asm("bset 20480, #2");
- 428  0071 72145000      bset 20480, #2
- 430                     ; 76             nop(); nop(); nop(); nop();
- 433  0075 9d            nop
- 439  0076 9d            nop
- 445  0077 9d            nop
- 451  0078 9d            nop
- 453                     ; 77             nop(); nop(); nop(); nop();
- 457  0079 9d            nop
- 463  007a 9d            nop
- 469  007b 9d            nop
- 475  007c 9d            nop
- 477                     ; 78 						nop(); nop(); nop(); nop();
- 481  007d 9d            nop
- 487  007e 9d            nop
- 493  007f 9d            nop
- 499  0080 9d            nop
- 501                     ; 81             _asm("bres 20480, #2");
- 505  0081 72155000      bres 20480, #2
- 508  0085 2011          	jra	L741
- 509  0087               L541:
- 510                     ; 88             _asm("bset 20480, #2");
- 513  0087 72145000      bset 20480, #2
- 515                     ; 91             nop(); nop(); nop(); nop();
- 518  008b 9d            nop
- 524  008c 9d            nop
- 530  008d 9d            nop
- 536  008e 9d            nop
- 538                     ; 92 						nop(); nop();
- 542  008f 9d            nop
- 548  0090 9d            nop
- 550                     ; 95             _asm("bres 20480, #2");
- 554  0091 72155000      bres 20480, #2
- 556                     ; 98             nop(); nop(); nop();
- 559  0095 9d            nop
- 565  0096 9d            nop
- 571  0097 9d            nop
- 573  0098               L741:
- 574                     ; 70     for (mask = 0x80; mask != 0; mask >>= 1) {
- 576  0098 0401          	srl	(OFST+0,sp)
- 580  009a 0d01          	tnz	(OFST+0,sp)
- 581  009c 26cd          	jrne	L731
- 582                     ; 102 }
- 585  009e 85            	popw	x
- 586  009f 81            	ret
- 631                     ; 104 void ws_write_grb_top(uint8_t* colour)
- 631                     ; 105 {
- 632                     	switch	.text
- 633  00a0               _ws_write_grb_top:
- 635  00a0 89            	pushw	x
- 636  00a1 88            	push	a
- 637       00000001      OFST:	set	1
- 640                     ; 107     for (i = 0; i < 3; ++i) {
- 642  00a2 0f01          	clr	(OFST+0,sp)
- 644  00a4               L371:
- 645                     ; 108         ws_write_byte_top(colour[i]);
- 647  00a4 7b01          	ld	a,(OFST+0,sp)
- 648  00a6 5f            	clrw	x
- 649  00a7 97            	ld	xl,a
- 650  00a8 72fb02        	addw	x,(OFST+1,sp)
- 651  00ab f6            	ld	a,(x)
- 652  00ac cd002a        	call	_ws_write_byte_top
- 654                     ; 107     for (i = 0; i < 3; ++i) {
- 656  00af 0c01          	inc	(OFST+0,sp)
- 660  00b1 7b01          	ld	a,(OFST+0,sp)
- 661  00b3 a103          	cp	a,#3
- 662  00b5 25ed          	jrult	L371
- 663                     ; 110 }
- 666  00b7 5b03          	addw	sp,#3
- 667  00b9 81            	ret
- 712                     ; 112 void ws_write_grb_bot(uint8_t* colour)
- 712                     ; 113 {
- 713                     	switch	.text
- 714  00ba               _ws_write_grb_bot:
- 716  00ba 89            	pushw	x
- 717  00bb 88            	push	a
- 718       00000001      OFST:	set	1
- 721                     ; 115     for (i = 0; i < 3; ++i) {
- 723  00bc 0f01          	clr	(OFST+0,sp)
- 725  00be               L322:
- 726                     ; 116         ws_write_byte_bot(colour[i]);
- 728  00be 7b01          	ld	a,(OFST+0,sp)
- 729  00c0 5f            	clrw	x
- 730  00c1 97            	ld	xl,a
- 731  00c2 72fb02        	addw	x,(OFST+1,sp)
- 732  00c5 f6            	ld	a,(x)
- 733  00c6 ad9d          	call	_ws_write_byte_bot
- 735                     ; 115     for (i = 0; i < 3; ++i) {
- 737  00c8 0c01          	inc	(OFST+0,sp)
- 741  00ca 7b01          	ld	a,(OFST+0,sp)
- 742  00cc a103          	cp	a,#3
- 743  00ce 25ee          	jrult	L322
- 744                     ; 118 }
- 747  00d0 5b03          	addw	sp,#3
- 748  00d2 81            	ret
- 795                     ; 120 void write_display(uint8_t (*lights)[3])
- 795                     ; 121 {
- 796                     	switch	.text
- 797  00d3               _write_display:
- 799  00d3 89            	pushw	x
- 800  00d4 88            	push	a
- 801       00000001      OFST:	set	1
- 804                     ; 123 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
- 806  00d5 0f01          	clr	(OFST+0,sp)
- 808  00d7               L352:
- 809                     ; 124 		ws_write_grb_top(lights[i]);
- 811  00d7 7b01          	ld	a,(OFST+0,sp)
- 812  00d9 97            	ld	xl,a
- 813  00da a603          	ld	a,#3
- 814  00dc 42            	mul	x,a
- 815  00dd 72fb02        	addw	x,(OFST+1,sp)
- 816  00e0 adbe          	call	_ws_write_grb_top
- 818                     ; 123 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
- 820  00e2 0c01          	inc	(OFST+0,sp)
- 824  00e4 7b01          	ld	a,(OFST+0,sp)
- 825  00e6 a10c          	cp	a,#12
- 826  00e8 25ed          	jrult	L352
- 827                     ; 127 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
- 829  00ea 0f01          	clr	(OFST+0,sp)
- 831  00ec               L162:
- 832                     ; 128 		ws_write_grb_bot(lights[NUM_LEDS-i-1]);
- 834  00ec a600          	ld	a,#0
- 835  00ee 97            	ld	xl,a
- 836  00ef a607          	ld	a,#7
- 837  00f1 1001          	sub	a,(OFST+0,sp)
- 838  00f3 2401          	jrnc	L02
- 839  00f5 5a            	decw	x
- 840  00f6               L02:
- 841  00f6 02            	rlwa	x,a
- 842  00f7 a603          	ld	a,#3
- 843  00f9 cd0000        	call	c_bmulx
- 845  00fc 72fb02        	addw	x,(OFST+1,sp)
- 846  00ff adb9          	call	_ws_write_grb_bot
- 848                     ; 127 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
- 850  0101 0c01          	inc	(OFST+0,sp)
- 854  0103 7b01          	ld	a,(OFST+0,sp)
- 855  0105 a10c          	cp	a,#12
- 856  0107 25e3          	jrult	L162
- 857                     ; 130 }
- 860  0109 5b03          	addw	sp,#3
- 861  010b 81            	ret
- 905                     ; 132 void clear_lights(void)
- 905                     ; 133 {
- 906                     	switch	.text
- 907  010c               _clear_lights:
- 909  010c 89            	pushw	x
- 910       00000002      OFST:	set	2
- 913                     ; 135 		for (j = 0; j < NUM_COLOURS; ++j) {
- 915  010d 0f02          	clr	(OFST+0,sp)
- 917  010f               L113:
- 918                     ; 137 			for (i = 0; i < NUM_LEDS; ++i) {
- 920  010f 0f01          	clr	(OFST-1,sp)
- 922  0111               L713:
- 923                     ; 138 				lights[i][j] = 0;
- 925  0111 7b01          	ld	a,(OFST-1,sp)
- 926  0113 97            	ld	xl,a
- 927  0114 a603          	ld	a,#3
- 928  0116 42            	mul	x,a
- 929  0117 01            	rrwa	x,a
- 930  0118 1b02          	add	a,(OFST+0,sp)
- 931  011a 2401          	jrnc	L42
- 932  011c 5c            	incw	x
- 933  011d               L42:
- 934  011d 02            	rlwa	x,a
- 935  011e 6f00          	clr	(L55_lights,x)
- 936                     ; 137 			for (i = 0; i < NUM_LEDS; ++i) {
- 938  0120 0c01          	inc	(OFST-1,sp)
- 942  0122 7b01          	ld	a,(OFST-1,sp)
- 943  0124 a108          	cp	a,#8
- 944  0126 25e9          	jrult	L713
- 945                     ; 135 		for (j = 0; j < NUM_COLOURS; ++j) {
- 947  0128 0c02          	inc	(OFST+0,sp)
- 951  012a 7b02          	ld	a,(OFST+0,sp)
- 952  012c a103          	cp	a,#3
- 953  012e 25df          	jrult	L113
- 954                     ; 141 }
- 957  0130 85            	popw	x
- 958  0131 81            	ret
-1012                     ; 143 void setAllSameColour(uint8_t* colour){
-1013                     	switch	.text
-1014  0132               _setAllSameColour:
-1016  0132 89            	pushw	x
-1017  0133 89            	pushw	x
-1018       00000002      OFST:	set	2
-1021                     ; 145 		for (i = 0; i < NUM_LEDS; ++i) {
-1023  0134 0f02          	clr	(OFST+0,sp)
-1025  0136               L353:
-1026                     ; 147 			for (j = 0; j < NUM_COLOURS; ++j) {
-1028  0136 0f01          	clr	(OFST-1,sp)
-1030  0138               L163:
-1031                     ; 148 				lights[i][j] = colour[j];
-1033  0138 7b02          	ld	a,(OFST+0,sp)
-1034  013a 97            	ld	xl,a
-1035  013b a603          	ld	a,#3
-1036  013d 42            	mul	x,a
-1037  013e 01            	rrwa	x,a
-1038  013f 1b01          	add	a,(OFST-1,sp)
-1039  0141 2401          	jrnc	L03
-1040  0143 5c            	incw	x
-1041  0144               L03:
-1042  0144 02            	rlwa	x,a
-1043  0145 7b01          	ld	a,(OFST-1,sp)
-1044  0147 905f          	clrw	y
-1045  0149 9097          	ld	yl,a
-1046  014b 72f903        	addw	y,(OFST+1,sp)
-1047  014e 90f6          	ld	a,(y)
-1048  0150 e700          	ld	(L55_lights,x),a
-1049                     ; 147 			for (j = 0; j < NUM_COLOURS; ++j) {
-1051  0152 0c01          	inc	(OFST-1,sp)
-1055  0154 7b01          	ld	a,(OFST-1,sp)
-1056  0156 a103          	cp	a,#3
-1057  0158 25de          	jrult	L163
-1058                     ; 145 		for (i = 0; i < NUM_LEDS; ++i) {
-1060  015a 0c02          	inc	(OFST+0,sp)
-1064  015c 7b02          	ld	a,(OFST+0,sp)
-1065  015e a108          	cp	a,#8
-1066  0160 25d4          	jrult	L353
-1067                     ; 151 }
-1070  0162 5b04          	addw	sp,#4
-1071  0164 81            	ret
-1074                     	bsct
-1075  0003               _dir:
-1076  0003 01            	dc.b	1
-1131                     ; 155 void RGBSpin(void)
-1131                     ; 156 {
-1132                     	switch	.text
-1133  0165               _RGBSpin:
-1135  0165 5205          	subw	sp,#5
-1136       00000005      OFST:	set	5
-1139                     ; 158 	int8_t j = 0;
-1141  0167 0f04          	clr	(OFST-1,sp)
-1143                     ; 159 	int8_t i = 0;
-1145  0169 0f05          	clr	(OFST+0,sp)
-1147                     ; 160 	uint8_t press = 0;
-1149  016b               L514:
-1150                     ; 163 		clear_lights();
-1152  016b ad9f          	call	_clear_lights
-1154                     ; 164 		lights[i][j] = MAX_BRIGHTNESS;
-1156  016d 7b04          	ld	a,(OFST-1,sp)
-1157  016f 5f            	clrw	x
-1158  0170 4d            	tnz	a
-1159  0171 2a01          	jrpl	L43
-1160  0173 53            	cplw	x
-1161  0174               L43:
-1162  0174 97            	ld	xl,a
-1163  0175 1f01          	ldw	(OFST-4,sp),x
-1165  0177 7b05          	ld	a,(OFST+0,sp)
-1166  0179 5f            	clrw	x
-1167  017a 4d            	tnz	a
-1168  017b 2a01          	jrpl	L63
-1169  017d 53            	cplw	x
-1170  017e               L63:
-1171  017e 97            	ld	xl,a
-1172  017f a603          	ld	a,#3
-1173  0181 cd0000        	call	c_bmulx
-1175  0184 72fb01        	addw	x,(OFST-4,sp)
-1176  0187 a614          	ld	a,#20
-1177  0189 e700          	ld	(L55_lights,x),a
-1178                     ; 165 		write_display(lights);
-1180  018b ae0000        	ldw	x,#L55_lights
-1181  018e cd00d3        	call	_write_display
-1183                     ; 167 		i += dir;
-1185  0191 7b05          	ld	a,(OFST+0,sp)
-1186  0193 bb03          	add	a,_dir
-1187  0195 6b05          	ld	(OFST+0,sp),a
-1189                     ; 168 		i = (i==-1) ? NUM_LEDS-1 : i;
-1191  0197 7b05          	ld	a,(OFST+0,sp)
-1192  0199 a1ff          	cp	a,#255
-1193  019b 2604          	jrne	L04
-1194  019d a607          	ld	a,#7
-1195  019f 2002          	jra	L24
-1196  01a1               L04:
-1197  01a1 7b05          	ld	a,(OFST+0,sp)
-1198  01a3               L24:
-1199  01a3 6b05          	ld	(OFST+0,sp),a
-1201                     ; 169 		i %= NUM_LEDS;
-1203  01a5 7b05          	ld	a,(OFST+0,sp)
-1204  01a7 ae0008        	ldw	x,#8
-1205  01aa 51            	exgw	x,y
-1206  01ab 5f            	clrw	x
-1207  01ac 4d            	tnz	a
-1208  01ad 2a01          	jrpl	L44
-1209  01af 5a            	decw	x
-1210  01b0               L44:
-1211  01b0 02            	rlwa	x,a
-1212  01b1 cd0000        	call	c_idiv
-1214  01b4 909f          	ld	a,yl
-1215  01b6 6b05          	ld	(OFST+0,sp),a
-1217                     ; 171 		if(i==0){
-1219  01b8 0d05          	tnz	(OFST+0,sp)
-1220  01ba 2615          	jrne	L124
-1221                     ; 172 			j += 1;
-1223  01bc 0c04          	inc	(OFST-1,sp)
-1225                     ; 173 			j %= NUM_COLOURS;
-1227  01be 7b04          	ld	a,(OFST-1,sp)
-1228  01c0 ae0003        	ldw	x,#3
-1229  01c3 51            	exgw	x,y
-1230  01c4 5f            	clrw	x
-1231  01c5 4d            	tnz	a
-1232  01c6 2a01          	jrpl	L64
-1233  01c8 5a            	decw	x
-1234  01c9               L64:
-1235  01c9 02            	rlwa	x,a
-1236  01ca cd0000        	call	c_idiv
-1238  01cd 909f          	ld	a,yl
-1239  01cf 6b04          	ld	(OFST-1,sp),a
-1241  01d1               L124:
-1242                     ; 176 		delay_ms(100);
-1244  01d1 ae0064        	ldw	x,#100
-1245  01d4 cd0000        	call	_delay_ms
-1248  01d7 2092          	jra	L514
-1304                     ; 186 void RGBSpin_no_button(void)
-1304                     ; 187 {
-1305                     	switch	.text
-1306  01d9               _RGBSpin_no_button:
-1308  01d9 5205          	subw	sp,#5
-1309       00000005      OFST:	set	5
-1312                     ; 189 	int8_t j = 0;
-1314  01db 0f04          	clr	(OFST-1,sp)
-1316                     ; 190 	int8_t i = 0;
-1318  01dd 0f05          	clr	(OFST+0,sp)
-1320                     ; 191 	int8_t dir = CW;
-1322  01df a601          	ld	a,#1
-1323  01e1 6b03          	ld	(OFST-2,sp),a
-1325  01e3               L154:
-1326                     ; 194 		clear_lights();
-1328  01e3 cd010c        	call	_clear_lights
-1330                     ; 195 		lights[i][j] = MAX_BRIGHTNESS;
-1332  01e6 7b04          	ld	a,(OFST-1,sp)
-1333  01e8 5f            	clrw	x
-1334  01e9 4d            	tnz	a
-1335  01ea 2a01          	jrpl	L25
-1336  01ec 53            	cplw	x
-1337  01ed               L25:
-1338  01ed 97            	ld	xl,a
-1339  01ee 1f01          	ldw	(OFST-4,sp),x
-1341  01f0 7b05          	ld	a,(OFST+0,sp)
-1342  01f2 5f            	clrw	x
-1343  01f3 4d            	tnz	a
-1344  01f4 2a01          	jrpl	L45
-1345  01f6 53            	cplw	x
-1346  01f7               L45:
-1347  01f7 97            	ld	xl,a
-1348  01f8 a603          	ld	a,#3
-1349  01fa cd0000        	call	c_bmulx
-1351  01fd 72fb01        	addw	x,(OFST-4,sp)
-1352  0200 a614          	ld	a,#20
-1353  0202 e700          	ld	(L55_lights,x),a
-1354                     ; 196 		write_display(lights);
-1356  0204 ae0000        	ldw	x,#L55_lights
-1357  0207 cd00d3        	call	_write_display
-1359                     ; 198 		i += dir;
-1361  020a 7b05          	ld	a,(OFST+0,sp)
-1362  020c 1b03          	add	a,(OFST-2,sp)
-1363  020e 6b05          	ld	(OFST+0,sp),a
-1365                     ; 199 		i = (i==-1) ? NUM_LEDS-1 : i;
-1367  0210 7b05          	ld	a,(OFST+0,sp)
-1368  0212 a1ff          	cp	a,#255
-1369  0214 2604          	jrne	L65
-1370  0216 a607          	ld	a,#7
-1371  0218 2002          	jra	L06
-1372  021a               L65:
-1373  021a 7b05          	ld	a,(OFST+0,sp)
-1374  021c               L06:
-1375  021c 6b05          	ld	(OFST+0,sp),a
-1377                     ; 200 		i %= NUM_LEDS;
-1379  021e 7b05          	ld	a,(OFST+0,sp)
-1380  0220 ae0008        	ldw	x,#8
-1381  0223 51            	exgw	x,y
-1382  0224 5f            	clrw	x
-1383  0225 4d            	tnz	a
-1384  0226 2a01          	jrpl	L26
-1385  0228 5a            	decw	x
-1386  0229               L26:
-1387  0229 02            	rlwa	x,a
-1388  022a cd0000        	call	c_idiv
-1390  022d 909f          	ld	a,yl
-1391  022f 6b05          	ld	(OFST+0,sp),a
-1393                     ; 202 		if(i==0){
-1395  0231 0d05          	tnz	(OFST+0,sp)
-1396  0233 2615          	jrne	L554
-1397                     ; 203 			j += 1;
-1399  0235 0c04          	inc	(OFST-1,sp)
-1401                     ; 204 			j %= NUM_COLOURS;
-1403  0237 7b04          	ld	a,(OFST-1,sp)
-1404  0239 ae0003        	ldw	x,#3
-1405  023c 51            	exgw	x,y
-1406  023d 5f            	clrw	x
-1407  023e 4d            	tnz	a
-1408  023f 2a01          	jrpl	L46
-1409  0241 5a            	decw	x
-1410  0242               L46:
-1411  0242 02            	rlwa	x,a
-1412  0243 cd0000        	call	c_idiv
-1414  0246 909f          	ld	a,yl
-1415  0248 6b04          	ld	(OFST-1,sp),a
-1417  024a               L554:
-1418                     ; 207 		delay_ms(100);
-1420  024a ae0064        	ldw	x,#100
-1421  024d cd0000        	call	_delay_ms
-1424  0250 2091          	jra	L154
-1458                     ; 211 uint8_t linearSine(uint8_t val){
-1459                     	switch	.text
-1460  0252               _linearSine:
-1462  0252 88            	push	a
-1463       00000000      OFST:	set	0
-1466                     ; 212 	val %= 256;
-1468  0253 7b01          	ld	a,(OFST+1,sp)
-1469  0255 a4ff          	and	a,#255
-1470  0257 6b01          	ld	(OFST+1,sp),a
-1471                     ; 213 	if(val < 128){
-1473  0259 7b01          	ld	a,(OFST+1,sp)
-1474  025b a180          	cp	a,#128
-1475  025d 2405          	jruge	L574
-1476                     ; 214 		return(val);
-1478  025f 7b01          	ld	a,(OFST+1,sp)
-1481  0261 5b01          	addw	sp,#1
-1482  0263 81            	ret
-1483  0264               L574:
-1484                     ; 215 	} else if (val > 128){
-1486  0264 7b01          	ld	a,(OFST+1,sp)
-1487  0266 a181          	cp	a,#129
-1488  0268 2507          	jrult	L774
-1489                     ; 216 		return(256 - val);
-1491  026a a600          	ld	a,#0
-1492  026c 1001          	sub	a,(OFST+1,sp)
-1495  026e 5b01          	addw	sp,#1
-1496  0270 81            	ret
-1497  0271               L774:
-1498                     ; 218 }	
-1501  0271 5b01          	addw	sp,#1
-1502  0273 81            	ret
-1579                     ; 222 void rainbowFade(void)
-1579                     ; 223 {
-1580                     	switch	.text
-1581  0274               _rainbowFade:
-1583  0274 520c          	subw	sp,#12
-1584       0000000c      OFST:	set	12
-1587                     ; 224 	uint8_t hue = 0;
-1589  0276 0f0c          	clr	(OFST+0,sp)
-1591                     ; 225 	uint8_t red = 0;
-1593                     ; 226 	uint8_t green = 0;
-1595                     ; 227 	uint8_t blue = 0;
-1597                     ; 228 	float scale = MAX_BRIGHTNESS*1.0/256;
-1599  0278 ce0002        	ldw	x,L545+2
-1600  027b 1f0a          	ldw	(OFST-2,sp),x
-1601  027d ce0000        	ldw	x,L545
-1602  0280 1f08          	ldw	(OFST-4,sp),x
-1604  0282               L155:
-1605                     ; 231 		colour[0] = linearSine(hue)*scale;
-1607  0282 7b0c          	ld	a,(OFST+0,sp)
-1608  0284 adcc          	call	_linearSine
-1610  0286 5f            	clrw	x
-1611  0287 97            	ld	xl,a
-1612  0288 cd0000        	call	c_itof
-1614  028b 96            	ldw	x,sp
-1615  028c 1c0001        	addw	x,#OFST-11
-1616  028f cd0000        	call	c_rtol
-1619  0292 96            	ldw	x,sp
-1620  0293 1c0008        	addw	x,#OFST-4
-1621  0296 cd0000        	call	c_ltor
-1623  0299 96            	ldw	x,sp
-1624  029a 1c0001        	addw	x,#OFST-11
-1625  029d cd0000        	call	c_fmul
-1627  02a0 cd0000        	call	c_ftol
-1629  02a3 b603          	ld	a,c_lreg+3
-1630  02a5 b700          	ld	L75_colour,a
-1631                     ; 232 		colour[1] = linearSine(hue-128)*scale;
-1633  02a7 7b0c          	ld	a,(OFST+0,sp)
-1634  02a9 a080          	sub	a,#128
-1635  02ab ada5          	call	_linearSine
-1637  02ad 5f            	clrw	x
-1638  02ae 97            	ld	xl,a
-1639  02af cd0000        	call	c_itof
-1641  02b2 96            	ldw	x,sp
-1642  02b3 1c0001        	addw	x,#OFST-11
-1643  02b6 cd0000        	call	c_rtol
-1646  02b9 96            	ldw	x,sp
-1647  02ba 1c0008        	addw	x,#OFST-4
-1648  02bd cd0000        	call	c_ltor
-1650  02c0 96            	ldw	x,sp
-1651  02c1 1c0001        	addw	x,#OFST-11
-1652  02c4 cd0000        	call	c_fmul
-1654  02c7 cd0000        	call	c_ftol
-1656  02ca b603          	ld	a,c_lreg+3
-1657  02cc b701          	ld	L75_colour+1,a
-1658                     ; 233 		colour[2] = linearSine(hue+128)*scale;
-1660  02ce 7b0c          	ld	a,(OFST+0,sp)
-1661  02d0 ab80          	add	a,#128
-1662  02d2 cd0252        	call	_linearSine
-1664  02d5 5f            	clrw	x
-1665  02d6 97            	ld	xl,a
-1666  02d7 cd0000        	call	c_itof
-1668  02da 96            	ldw	x,sp
-1669  02db 1c0001        	addw	x,#OFST-11
-1670  02de cd0000        	call	c_rtol
-1673  02e1 96            	ldw	x,sp
-1674  02e2 1c0008        	addw	x,#OFST-4
-1675  02e5 cd0000        	call	c_ltor
-1677  02e8 96            	ldw	x,sp
-1678  02e9 1c0001        	addw	x,#OFST-11
-1679  02ec cd0000        	call	c_fmul
-1681  02ef cd0000        	call	c_ftol
-1683  02f2 b603          	ld	a,c_lreg+3
-1684  02f4 b702          	ld	L75_colour+2,a
-1685                     ; 235 		clear_lights();
-1687  02f6 cd010c        	call	_clear_lights
-1689                     ; 236 		setAllSameColour(colour); 
-1691  02f9 ae0000        	ldw	x,#L75_colour
-1692  02fc cd0132        	call	_setAllSameColour
-1694                     ; 237 		write_display(lights);
-1696  02ff ae0000        	ldw	x,#L55_lights
-1697  0302 cd00d3        	call	_write_display
-1699                     ; 239 		hue++;
-1701  0305 0c0c          	inc	(OFST+0,sp)
-1703                     ; 241 		delay_ms(50);
-1705  0307 ae0032        	ldw	x,#50
-1706  030a cd0000        	call	_delay_ms
-1709  030d ac820282      	jpf	L155
-1743                     ; 249 int main(void) {
-1744                     	switch	.text
-1745  0311               _main:
-1749                     ; 252 	sim();
-1752  0311 9b            sim
-1754                     ; 253 	CLK_DeInit();
-1757  0312 cd0000        	call	_CLK_DeInit
-1759                     ; 254 	CLK_HSECmd(DISABLE);
-1761  0315 4f            	clr	a
-1762  0316 cd0000        	call	_CLK_HSECmd
-1764                     ; 255 	CLK_HSICmd(ENABLE);
-1766  0319 a601          	ld	a,#1
-1767  031b cd0000        	call	_CLK_HSICmd
-1769                     ; 256 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-1771  031e 4f            	clr	a
-1772  031f cd0000        	call	_CLK_HSIPrescalerConfig
-1774                     ; 257 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-1776  0322 a680          	ld	a,#128
-1777  0324 cd0000        	call	_CLK_SYSCLKConfig
-1779                     ; 260 	GPIO_DeInit(GPIOA);
-1781  0327 ae5000        	ldw	x,#20480
-1782  032a cd0000        	call	_GPIO_DeInit
-1784                     ; 261 	GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
-1786  032d 4be0          	push	#224
-1787  032f 4b02          	push	#2
-1788  0331 ae5000        	ldw	x,#20480
-1789  0334 cd0000        	call	_GPIO_Init
-1791  0337 85            	popw	x
-1792                     ; 262 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
-1794  0338 4be0          	push	#224
-1795  033a 4b04          	push	#4
-1796  033c ae5000        	ldw	x,#20480
-1797  033f cd0000        	call	_GPIO_Init
-1799  0342 85            	popw	x
-1800                     ; 264 	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);
-1802  0343 4b20          	push	#32
-1803  0345 4b10          	push	#16
-1804  0347 ae5005        	ldw	x,#20485
-1805  034a cd0000        	call	_GPIO_Init
-1807  034d 85            	popw	x
-1808                     ; 265 	EXTI->CR1 &= ~(1 << 3);
-1810  034e 721750a0      	bres	20640,#3
-1811                     ; 266 	EXTI->CR1 |= (1 << 2);
-1813  0352 721450a0      	bset	20640,#2
-1814                     ; 269 	clear_lights();
-1816  0356 cd010c        	call	_clear_lights
-1818                     ; 271 	rim();
-1821  0359 9a            rim
-1823  035a               L565:
-1824                     ; 274 		RGBSpin();
-1826  035a cd0165        	call	_RGBSpin
-1829  035d 20fb          	jra	L565
-1853                     ; 280 @far @interrupt void buttonHandler(void)
-1853                     ; 281 {
-1855                     	switch	.text
-1856  035f               f_buttonHandler:
-1860                     ; 282 	dir = (dir==CW) ? CCW : CW;
-1862  035f b603          	ld	a,_dir
-1863  0361 a101          	cp	a,#1
-1864  0363 2604          	jrne	L67
-1865  0365 a6ff          	ld	a,#255
-1866  0367 2002          	jra	L001
-1867  0369               L67:
-1868  0369 a601          	ld	a,#1
-1869  036b               L001:
-1870  036b b703          	ld	_dir,a
-1871                     ; 285 }
-1874  036d 80            	iret
-1918                     	xdef	f_buttonHandler
-1919                     	xdef	_main
-1920                     	xdef	_rainbowFade
-1921                     	xdef	_linearSine
-1922                     	xdef	_RGBSpin_no_button
-1923                     	xdef	_RGBSpin
-1924                     	xdef	_dir
-1925                     	xdef	_setAllSameColour
-1926                     	xdef	_clear_lights
-1927                     	xdef	_write_display
-1928                     	xdef	_ws_write_grb_bot
-1929                     	xdef	_ws_write_grb_top
-1930                     	xdef	_ws_write_byte_bot
-1931                     	xdef	_ws_write_byte_top
-1932                     	switch	.ubsct
-1933  0000               L55_lights:
-1934  0000 000000000000  	ds.b	24
-1935                     	xdef	_delay_ms
-1936                     	xref	_GPIO_Init
-1937                     	xref	_GPIO_DeInit
-1938                     	xref	_CLK_SYSCLKConfig
-1939                     	xref	_CLK_HSIPrescalerConfig
-1940                     	xref	_CLK_HSICmd
-1941                     	xref	_CLK_HSECmd
-1942                     	xref	_CLK_DeInit
-1943                     .const:	section	.text
-1944  0000               L545:
-1945  0000 3da00000      	dc.w	15776,0
-1946                     	xref.b	c_lreg
-1947                     	xref.b	c_x
-1967                     	xref	c_ftol
-1968                     	xref	c_fmul
-1969                     	xref	c_rtol
-1970                     	xref	c_itof
-1971                     	xref	c_ltor
-1972                     	xref	c_idiv
-1973                     	xref	c_bmulx
-1974                     	end
+  14                     	bsct
+  15  0000               _dir:
+  16  0000 01            	dc.b	1
+  17  0001               _change:
+  18  0001 00            	dc.b	0
+  77                     ; 18 void delay_ms_HS(uint16_t ms)
+  77                     ; 19 {
+  79                     	switch	.text
+  80  0000               _delay_ms_HS:
+  82  0000 89            	pushw	x
+  83  0001 5204          	subw	sp,#4
+  84       00000004      OFST:	set	4
+  87                     ; 21 	for (ms_count = 0; ms_count < ms; ++ms_count) {
+  89  0003 5f            	clrw	x
+  90  0004 1f03          	ldw	(OFST-1,sp),x
+  93  0006 2019          	jra	L34
+  94  0008               L73:
+  95                     ; 23 		for (ticks = 0; ticks < 1074; ++ticks) {
+  97  0008 5f            	clrw	x
+  98  0009 1f01          	ldw	(OFST-3,sp),x
+ 100  000b               L74:
+ 101                     ; 24 			nop();
+ 104  000b 9d            nop
+ 106                     ; 23 		for (ticks = 0; ticks < 1074; ++ticks) {
+ 109  000c 1e01          	ldw	x,(OFST-3,sp)
+ 110  000e 1c0001        	addw	x,#1
+ 111  0011 1f01          	ldw	(OFST-3,sp),x
+ 115  0013 1e01          	ldw	x,(OFST-3,sp)
+ 116  0015 a30432        	cpw	x,#1074
+ 117  0018 25f1          	jrult	L74
+ 118                     ; 21 	for (ms_count = 0; ms_count < ms; ++ms_count) {
+ 120  001a 1e03          	ldw	x,(OFST-1,sp)
+ 121  001c 1c0001        	addw	x,#1
+ 122  001f 1f03          	ldw	(OFST-1,sp),x
+ 124  0021               L34:
+ 127  0021 1e03          	ldw	x,(OFST-1,sp)
+ 128  0023 1305          	cpw	x,(OFST+1,sp)
+ 129  0025 25e1          	jrult	L73
+ 130                     ; 27 }
+ 133  0027 5b06          	addw	sp,#6
+ 134  0029 81            	ret
+ 187                     ; 29 void delay_ms(uint16_t ms)
+ 187                     ; 30 {
+ 188                     	switch	.text
+ 189  002a               _delay_ms:
+ 191  002a 5204          	subw	sp,#4
+ 192       00000004      OFST:	set	4
+ 195                     ; 33 	uint16_t targ = ms * 0.4;
+ 197  002c cd0000        	call	c_uitof
+ 199  002f ae0004        	ldw	x,#L701
+ 200  0032 cd0000        	call	c_fmul
+ 202  0035 cd0000        	call	c_ftoi
+ 204  0038 1f01          	ldw	(OFST-3,sp),x
+ 206                     ; 35 	for (ms_count = 0; ms_count < targ; ++ms_count) {
+ 208  003a 5f            	clrw	x
+ 209  003b 1f03          	ldw	(OFST-1,sp),x
+ 212  003d 2008          	jra	L711
+ 213  003f               L311:
+ 214                     ; 36 		nop();
+ 217  003f 9d            nop
+ 219                     ; 35 	for (ms_count = 0; ms_count < targ; ++ms_count) {
+ 222  0040 1e03          	ldw	x,(OFST-1,sp)
+ 223  0042 1c0001        	addw	x,#1
+ 224  0045 1f03          	ldw	(OFST-1,sp),x
+ 226  0047               L711:
+ 229  0047 1e03          	ldw	x,(OFST-1,sp)
+ 230  0049 1301          	cpw	x,(OFST-3,sp)
+ 231  004b 25f2          	jrult	L311
+ 232                     ; 38 }
+ 235  004d 5b04          	addw	sp,#4
+ 236  004f 81            	ret
+ 239                     	bsct
+ 240  0002               L521_colour:
+ 241  0002 00            	dc.b	0
+ 242  0003 00            	dc.b	0
+ 243  0004 00            	dc.b	0
+ 286                     ; 45 void ws_write_byte_top(uint8_t byte)
+ 286                     ; 46 {
+ 287                     	switch	.text
+ 288  0050               _ws_write_byte_top:
+ 290  0050 88            	push	a
+ 291  0051 88            	push	a
+ 292       00000001      OFST:	set	1
+ 295                     ; 48     for (mask = 0x80; mask != 0; mask >>= 1) {
+ 297  0052 a680          	ld	a,#128
+ 298  0054 6b01          	ld	(OFST+0,sp),a
+ 300  0056               L151:
+ 301                     ; 49         if ((byte & mask) != 0) {
+ 303  0056 7b02          	ld	a,(OFST+1,sp)
+ 304  0058 1501          	bcp	a,(OFST+0,sp)
+ 305  005a 2716          	jreq	L751
+ 306                     ; 51             _asm("bset 20480, #1");
+ 309  005c 72125000      bset 20480, #1
+ 311                     ; 54             nop(); nop(); nop(); nop();
+ 314  0060 9d            nop
+ 320  0061 9d            nop
+ 326  0062 9d            nop
+ 332  0063 9d            nop
+ 334                     ; 55             nop(); nop(); nop(); nop();
+ 338  0064 9d            nop
+ 344  0065 9d            nop
+ 350  0066 9d            nop
+ 356  0067 9d            nop
+ 358                     ; 56 						nop(); nop(); nop(); nop();
+ 362  0068 9d            nop
+ 368  0069 9d            nop
+ 374  006a 9d            nop
+ 380  006b 9d            nop
+ 382                     ; 59             _asm("bres 20480, #1");
+ 386  006c 72135000      bres 20480, #1
+ 389  0070 2011          	jra	L161
+ 390  0072               L751:
+ 391                     ; 66             _asm("bset 20480, #1");
+ 394  0072 72125000      bset 20480, #1
+ 396                     ; 69             nop(); nop(); nop(); nop();
+ 399  0076 9d            nop
+ 405  0077 9d            nop
+ 411  0078 9d            nop
+ 417  0079 9d            nop
+ 419                     ; 70 						nop(); nop();
+ 423  007a 9d            nop
+ 429  007b 9d            nop
+ 431                     ; 73             _asm("bres 20480, #1");
+ 435  007c 72135000      bres 20480, #1
+ 437                     ; 76             nop(); nop(); nop();
+ 440  0080 9d            nop
+ 446  0081 9d            nop
+ 452  0082 9d            nop
+ 454  0083               L161:
+ 455                     ; 48     for (mask = 0x80; mask != 0; mask >>= 1) {
+ 457  0083 0401          	srl	(OFST+0,sp)
+ 461  0085 0d01          	tnz	(OFST+0,sp)
+ 462  0087 26cd          	jrne	L151
+ 463                     ; 80 }
+ 466  0089 85            	popw	x
+ 467  008a 81            	ret
+ 512                     ; 81 void ws_write_byte_bot(uint8_t byte)
+ 512                     ; 82 {
+ 513                     	switch	.text
+ 514  008b               _ws_write_byte_bot:
+ 516  008b 88            	push	a
+ 517  008c 88            	push	a
+ 518       00000001      OFST:	set	1
+ 521                     ; 84     for (mask = 0x80; mask != 0; mask >>= 1) {
+ 523  008d a680          	ld	a,#128
+ 524  008f 6b01          	ld	(OFST+0,sp),a
+ 526  0091               L502:
+ 527                     ; 85         if ((byte & mask) != 0) {
+ 529  0091 7b02          	ld	a,(OFST+1,sp)
+ 530  0093 1501          	bcp	a,(OFST+0,sp)
+ 531  0095 2716          	jreq	L312
+ 532                     ; 87             _asm("bset 20480, #2");
+ 535  0097 72145000      bset 20480, #2
+ 537                     ; 90             nop(); nop(); nop(); nop();
+ 540  009b 9d            nop
+ 546  009c 9d            nop
+ 552  009d 9d            nop
+ 558  009e 9d            nop
+ 560                     ; 91             nop(); nop(); nop(); nop();
+ 564  009f 9d            nop
+ 570  00a0 9d            nop
+ 576  00a1 9d            nop
+ 582  00a2 9d            nop
+ 584                     ; 92 						nop(); nop(); nop(); nop();
+ 588  00a3 9d            nop
+ 594  00a4 9d            nop
+ 600  00a5 9d            nop
+ 606  00a6 9d            nop
+ 608                     ; 95             _asm("bres 20480, #2");
+ 612  00a7 72155000      bres 20480, #2
+ 615  00ab 2011          	jra	L512
+ 616  00ad               L312:
+ 617                     ; 102             _asm("bset 20480, #2");
+ 620  00ad 72145000      bset 20480, #2
+ 622                     ; 105             nop(); nop(); nop(); nop();
+ 625  00b1 9d            nop
+ 631  00b2 9d            nop
+ 637  00b3 9d            nop
+ 643  00b4 9d            nop
+ 645                     ; 106 						nop(); nop();
+ 649  00b5 9d            nop
+ 655  00b6 9d            nop
+ 657                     ; 109             _asm("bres 20480, #2");
+ 661  00b7 72155000      bres 20480, #2
+ 663                     ; 112             nop(); nop(); nop();
+ 666  00bb 9d            nop
+ 672  00bc 9d            nop
+ 678  00bd 9d            nop
+ 680  00be               L512:
+ 681                     ; 84     for (mask = 0x80; mask != 0; mask >>= 1) {
+ 683  00be 0401          	srl	(OFST+0,sp)
+ 687  00c0 0d01          	tnz	(OFST+0,sp)
+ 688  00c2 26cd          	jrne	L502
+ 689                     ; 116 }
+ 692  00c4 85            	popw	x
+ 693  00c5 81            	ret
+ 738                     ; 118 void ws_write_grb_top(uint8_t* colour)
+ 738                     ; 119 {
+ 739                     	switch	.text
+ 740  00c6               _ws_write_grb_top:
+ 742  00c6 89            	pushw	x
+ 743  00c7 88            	push	a
+ 744       00000001      OFST:	set	1
+ 747                     ; 121     for (i = 0; i < 3; ++i) {
+ 749  00c8 0f01          	clr	(OFST+0,sp)
+ 751  00ca               L142:
+ 752                     ; 122         ws_write_byte_top(colour[i]);
+ 754  00ca 7b01          	ld	a,(OFST+0,sp)
+ 755  00cc 5f            	clrw	x
+ 756  00cd 97            	ld	xl,a
+ 757  00ce 72fb02        	addw	x,(OFST+1,sp)
+ 758  00d1 f6            	ld	a,(x)
+ 759  00d2 cd0050        	call	_ws_write_byte_top
+ 761                     ; 121     for (i = 0; i < 3; ++i) {
+ 763  00d5 0c01          	inc	(OFST+0,sp)
+ 767  00d7 7b01          	ld	a,(OFST+0,sp)
+ 768  00d9 a103          	cp	a,#3
+ 769  00db 25ed          	jrult	L142
+ 770                     ; 124 }
+ 773  00dd 5b03          	addw	sp,#3
+ 774  00df 81            	ret
+ 819                     ; 126 void ws_write_grb_bot(uint8_t* colour)
+ 819                     ; 127 {
+ 820                     	switch	.text
+ 821  00e0               _ws_write_grb_bot:
+ 823  00e0 89            	pushw	x
+ 824  00e1 88            	push	a
+ 825       00000001      OFST:	set	1
+ 828                     ; 129     for (i = 0; i < 3; ++i) {
+ 830  00e2 0f01          	clr	(OFST+0,sp)
+ 832  00e4               L172:
+ 833                     ; 130         ws_write_byte_bot(colour[i]);
+ 835  00e4 7b01          	ld	a,(OFST+0,sp)
+ 836  00e6 5f            	clrw	x
+ 837  00e7 97            	ld	xl,a
+ 838  00e8 72fb02        	addw	x,(OFST+1,sp)
+ 839  00eb f6            	ld	a,(x)
+ 840  00ec ad9d          	call	_ws_write_byte_bot
+ 842                     ; 129     for (i = 0; i < 3; ++i) {
+ 844  00ee 0c01          	inc	(OFST+0,sp)
+ 848  00f0 7b01          	ld	a,(OFST+0,sp)
+ 849  00f2 a103          	cp	a,#3
+ 850  00f4 25ee          	jrult	L172
+ 851                     ; 132 }
+ 854  00f6 5b03          	addw	sp,#3
+ 855  00f8 81            	ret
+ 904                     ; 134 void write_display(uint8_t (*lights)[3])
+ 904                     ; 135 {
+ 905                     	switch	.text
+ 906  00f9               _write_display:
+ 908  00f9 89            	pushw	x
+ 909  00fa 88            	push	a
+ 910       00000001      OFST:	set	1
+ 913                     ; 137 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); //2MHz
+ 915  00fb 4f            	clr	a
+ 916  00fc cd0000        	call	_CLK_HSIPrescalerConfig
+ 918                     ; 138 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1); // 15.625kHz
+ 920  00ff a680          	ld	a,#128
+ 921  0101 cd0000        	call	_CLK_SYSCLKConfig
+ 923                     ; 140 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
+ 925  0104 0f01          	clr	(OFST+0,sp)
+ 927  0106               L123:
+ 928                     ; 141 		ws_write_grb_top(lights[i]);
+ 930  0106 7b01          	ld	a,(OFST+0,sp)
+ 931  0108 97            	ld	xl,a
+ 932  0109 a603          	ld	a,#3
+ 933  010b 42            	mul	x,a
+ 934  010c 72fb02        	addw	x,(OFST+1,sp)
+ 935  010f adb5          	call	_ws_write_grb_top
+ 937                     ; 140 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
+ 939  0111 0c01          	inc	(OFST+0,sp)
+ 943  0113 7b01          	ld	a,(OFST+0,sp)
+ 944  0115 a10c          	cp	a,#12
+ 945  0117 25ed          	jrult	L123
+ 946                     ; 144 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
+ 948  0119 0f01          	clr	(OFST+0,sp)
+ 950  011b               L723:
+ 951                     ; 145 		ws_write_grb_bot(lights[NUM_LEDS-i-1]);
+ 953  011b a600          	ld	a,#0
+ 954  011d 97            	ld	xl,a
+ 955  011e a607          	ld	a,#7
+ 956  0120 1001          	sub	a,(OFST+0,sp)
+ 957  0122 2401          	jrnc	L22
+ 958  0124 5a            	decw	x
+ 959  0125               L22:
+ 960  0125 02            	rlwa	x,a
+ 961  0126 a603          	ld	a,#3
+ 962  0128 cd0000        	call	c_bmulx
+ 964  012b 72fb02        	addw	x,(OFST+1,sp)
+ 965  012e adb0          	call	_ws_write_grb_bot
+ 967                     ; 144 	for (i = 0; i < 3*NUM_LEDS_HALF; ++i) {
+ 969  0130 0c01          	inc	(OFST+0,sp)
+ 973  0132 7b01          	ld	a,(OFST+0,sp)
+ 974  0134 a10c          	cp	a,#12
+ 975  0136 25e3          	jrult	L723
+ 976                     ; 147 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //2MHz
+ 978  0138 a618          	ld	a,#24
+ 979  013a cd0000        	call	_CLK_HSIPrescalerConfig
+ 981                     ; 148 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV128); // 15.625kHz
+ 983  013d a687          	ld	a,#135
+ 984  013f cd0000        	call	_CLK_SYSCLKConfig
+ 986                     ; 149 }
+ 989  0142 5b03          	addw	sp,#3
+ 990  0144 81            	ret
+1034                     ; 151 void clear_lights(void)
+1034                     ; 152 {
+1035                     	switch	.text
+1036  0145               _clear_lights:
+1038  0145 89            	pushw	x
+1039       00000002      OFST:	set	2
+1042                     ; 154 		for (j = 0; j < NUM_COLOURS; ++j) {
+1044  0146 0f02          	clr	(OFST+0,sp)
+1046  0148               L753:
+1047                     ; 156 			for (i = 0; i < NUM_LEDS; ++i) {
+1049  0148 0f01          	clr	(OFST-1,sp)
+1051  014a               L563:
+1052                     ; 157 				lights[i][j] = 0;
+1054  014a 7b01          	ld	a,(OFST-1,sp)
+1055  014c 97            	ld	xl,a
+1056  014d a603          	ld	a,#3
+1057  014f 42            	mul	x,a
+1058  0150 01            	rrwa	x,a
+1059  0151 1b02          	add	a,(OFST+0,sp)
+1060  0153 2401          	jrnc	L62
+1061  0155 5c            	incw	x
+1062  0156               L62:
+1063  0156 02            	rlwa	x,a
+1064  0157 6f00          	clr	(L321_lights,x)
+1065                     ; 156 			for (i = 0; i < NUM_LEDS; ++i) {
+1067  0159 0c01          	inc	(OFST-1,sp)
+1071  015b 7b01          	ld	a,(OFST-1,sp)
+1072  015d a108          	cp	a,#8
+1073  015f 25e9          	jrult	L563
+1074                     ; 154 		for (j = 0; j < NUM_COLOURS; ++j) {
+1076  0161 0c02          	inc	(OFST+0,sp)
+1080  0163 7b02          	ld	a,(OFST+0,sp)
+1081  0165 a103          	cp	a,#3
+1082  0167 25df          	jrult	L753
+1083                     ; 160 }
+1086  0169 85            	popw	x
+1087  016a 81            	ret
+1141                     ; 162 void setAllSameColour(uint8_t* colour){
+1142                     	switch	.text
+1143  016b               _setAllSameColour:
+1145  016b 89            	pushw	x
+1146  016c 89            	pushw	x
+1147       00000002      OFST:	set	2
+1150                     ; 164 		for (i = 0; i < NUM_LEDS; ++i) {
+1152  016d 0f02          	clr	(OFST+0,sp)
+1154  016f               L124:
+1155                     ; 166 			for (j = 0; j < NUM_COLOURS; ++j) {
+1157  016f 0f01          	clr	(OFST-1,sp)
+1159  0171               L724:
+1160                     ; 167 				lights[i][j] = colour[j];
+1162  0171 7b02          	ld	a,(OFST+0,sp)
+1163  0173 97            	ld	xl,a
+1164  0174 a603          	ld	a,#3
+1165  0176 42            	mul	x,a
+1166  0177 01            	rrwa	x,a
+1167  0178 1b01          	add	a,(OFST-1,sp)
+1168  017a 2401          	jrnc	L23
+1169  017c 5c            	incw	x
+1170  017d               L23:
+1171  017d 02            	rlwa	x,a
+1172  017e 7b01          	ld	a,(OFST-1,sp)
+1173  0180 905f          	clrw	y
+1174  0182 9097          	ld	yl,a
+1175  0184 72f903        	addw	y,(OFST+1,sp)
+1176  0187 90f6          	ld	a,(y)
+1177  0189 e700          	ld	(L321_lights,x),a
+1178                     ; 166 			for (j = 0; j < NUM_COLOURS; ++j) {
+1180  018b 0c01          	inc	(OFST-1,sp)
+1184  018d 7b01          	ld	a,(OFST-1,sp)
+1185  018f a103          	cp	a,#3
+1186  0191 25de          	jrult	L724
+1187                     ; 164 		for (i = 0; i < NUM_LEDS; ++i) {
+1189  0193 0c02          	inc	(OFST+0,sp)
+1193  0195 7b02          	ld	a,(OFST+0,sp)
+1194  0197 a108          	cp	a,#8
+1195  0199 25d4          	jrult	L124
+1196                     ; 170 }
+1199  019b 5b04          	addw	sp,#4
+1200  019d 81            	ret
+1258                     ; 172 void RGBSpin(void)
+1258                     ; 173 {
+1259                     	switch	.text
+1260  019e               _RGBSpin:
+1262  019e 5205          	subw	sp,#5
+1263       00000005      OFST:	set	5
+1266                     ; 175 	int8_t j = 0;
+1268  01a0 0f04          	clr	(OFST-1,sp)
+1270                     ; 176 	int8_t i = 0;
+1272  01a2 0f05          	clr	(OFST+0,sp)
+1274                     ; 177 	uint8_t press = 0;
+1276                     ; 179 	change = FALSE;
+1278  01a4 3f01          	clr	_change
+1280  01a6 206c          	jra	L764
+1281  01a8               L364:
+1282                     ; 181 		clear_lights();
+1284  01a8 ad9b          	call	_clear_lights
+1286                     ; 182 		lights[i][j] = MAX_BRIGHTNESS;
+1288  01aa 7b04          	ld	a,(OFST-1,sp)
+1289  01ac 5f            	clrw	x
+1290  01ad 4d            	tnz	a
+1291  01ae 2a01          	jrpl	L63
+1292  01b0 53            	cplw	x
+1293  01b1               L63:
+1294  01b1 97            	ld	xl,a
+1295  01b2 1f01          	ldw	(OFST-4,sp),x
+1297  01b4 7b05          	ld	a,(OFST+0,sp)
+1298  01b6 5f            	clrw	x
+1299  01b7 4d            	tnz	a
+1300  01b8 2a01          	jrpl	L04
+1301  01ba 53            	cplw	x
+1302  01bb               L04:
+1303  01bb 97            	ld	xl,a
+1304  01bc a603          	ld	a,#3
+1305  01be cd0000        	call	c_bmulx
+1307  01c1 72fb01        	addw	x,(OFST-4,sp)
+1308  01c4 a61e          	ld	a,#30
+1309  01c6 e700          	ld	(L321_lights,x),a
+1310                     ; 183 		write_display(lights);
+1312  01c8 ae0000        	ldw	x,#L321_lights
+1313  01cb cd00f9        	call	_write_display
+1315                     ; 185 		i += dir;
+1317  01ce 7b05          	ld	a,(OFST+0,sp)
+1318  01d0 bb00          	add	a,_dir
+1319  01d2 6b05          	ld	(OFST+0,sp),a
+1321                     ; 186 		i = (i==-1) ? NUM_LEDS-1 : i;
+1323  01d4 7b05          	ld	a,(OFST+0,sp)
+1324  01d6 a1ff          	cp	a,#255
+1325  01d8 2604          	jrne	L24
+1326  01da a607          	ld	a,#7
+1327  01dc 2002          	jra	L44
+1328  01de               L24:
+1329  01de 7b05          	ld	a,(OFST+0,sp)
+1330  01e0               L44:
+1331  01e0 6b05          	ld	(OFST+0,sp),a
+1333                     ; 187 		i %= NUM_LEDS;
+1335  01e2 7b05          	ld	a,(OFST+0,sp)
+1336  01e4 ae0008        	ldw	x,#8
+1337  01e7 51            	exgw	x,y
+1338  01e8 5f            	clrw	x
+1339  01e9 4d            	tnz	a
+1340  01ea 2a01          	jrpl	L64
+1341  01ec 5a            	decw	x
+1342  01ed               L64:
+1343  01ed 02            	rlwa	x,a
+1344  01ee cd0000        	call	c_idiv
+1346  01f1 909f          	ld	a,yl
+1347  01f3 6b05          	ld	(OFST+0,sp),a
+1349                     ; 189 		if(i==0){
+1351  01f5 0d05          	tnz	(OFST+0,sp)
+1352  01f7 2615          	jrne	L374
+1353                     ; 190 			j += 1;
+1355  01f9 0c04          	inc	(OFST-1,sp)
+1357                     ; 191 			j %= NUM_COLOURS;
+1359  01fb 7b04          	ld	a,(OFST-1,sp)
+1360  01fd ae0003        	ldw	x,#3
+1361  0200 51            	exgw	x,y
+1362  0201 5f            	clrw	x
+1363  0202 4d            	tnz	a
+1364  0203 2a01          	jrpl	L05
+1365  0205 5a            	decw	x
+1366  0206               L05:
+1367  0206 02            	rlwa	x,a
+1368  0207 cd0000        	call	c_idiv
+1370  020a 909f          	ld	a,yl
+1371  020c 6b04          	ld	(OFST-1,sp),a
+1373  020e               L374:
+1374                     ; 193 		delay_ms(125);
+1376  020e ae007d        	ldw	x,#125
+1377  0211 cd002a        	call	_delay_ms
+1379  0214               L764:
+1380                     ; 180 	while (!change) {
+1382  0214 3d01          	tnz	_change
+1383  0216 2790          	jreq	L364
+1384                     ; 195 }
+1387  0218 5b05          	addw	sp,#5
+1388  021a 81            	ret
+1422                     ; 197 uint8_t linearSine(uint8_t val){
+1423                     	switch	.text
+1424  021b               _linearSine:
+1426  021b 88            	push	a
+1427       00000000      OFST:	set	0
+1430                     ; 198 	val %= 256;
+1432  021c 7b01          	ld	a,(OFST+1,sp)
+1433  021e a4ff          	and	a,#255
+1434  0220 6b01          	ld	(OFST+1,sp),a
+1435                     ; 199 	if(val < 128){
+1437  0222 7b01          	ld	a,(OFST+1,sp)
+1438  0224 a180          	cp	a,#128
+1439  0226 2405          	jruge	L315
+1440                     ; 200 		return(val);
+1442  0228 7b01          	ld	a,(OFST+1,sp)
+1445  022a 5b01          	addw	sp,#1
+1446  022c 81            	ret
+1447  022d               L315:
+1448                     ; 201 	} else if (val > 128){
+1450  022d 7b01          	ld	a,(OFST+1,sp)
+1451  022f a181          	cp	a,#129
+1452  0231 2507          	jrult	L515
+1453                     ; 202 		return(256 - val);
+1455  0233 a600          	ld	a,#0
+1456  0235 1001          	sub	a,(OFST+1,sp)
+1459  0237 5b01          	addw	sp,#1
+1460  0239 81            	ret
+1461  023a               L515:
+1462                     ; 204 }	
+1465  023a 5b01          	addw	sp,#1
+1466  023c 81            	ret
+1544                     ; 206 void rainbowFade(void)
+1544                     ; 207 {
+1545                     	switch	.text
+1546  023d               _rainbowFade:
+1548  023d 520c          	subw	sp,#12
+1549       0000000c      OFST:	set	12
+1552                     ; 208 	uint8_t hue = 0;
+1554  023f 0f0c          	clr	(OFST+0,sp)
+1556                     ; 209 	uint8_t red = 0;
+1558                     ; 210 	uint8_t green = 0;
+1560                     ; 211 	uint8_t blue = 0;
+1562                     ; 212 	float scale = MAX_BRIGHTNESS*1.0/256;
+1564  0241 ce0002        	ldw	x,L365+2
+1565  0244 1f0a          	ldw	(OFST-2,sp),x
+1566  0246 ce0000        	ldw	x,L365
+1567  0249 1f08          	ldw	(OFST-4,sp),x
+1569                     ; 215 	change = FALSE;
+1571  024b 3f01          	clr	_change
+1573  024d ace002e0      	jpf	L375
+1574  0251               L765:
+1575                     ; 218 		colour[0] = linearSine(hue)*scale;
+1577  0251 7b0c          	ld	a,(OFST+0,sp)
+1578  0253 adc6          	call	_linearSine
+1580  0255 5f            	clrw	x
+1581  0256 97            	ld	xl,a
+1582  0257 cd0000        	call	c_itof
+1584  025a 96            	ldw	x,sp
+1585  025b 1c0001        	addw	x,#OFST-11
+1586  025e cd0000        	call	c_rtol
+1589  0261 96            	ldw	x,sp
+1590  0262 1c0008        	addw	x,#OFST-4
+1591  0265 cd0000        	call	c_ltor
+1593  0268 96            	ldw	x,sp
+1594  0269 1c0001        	addw	x,#OFST-11
+1595  026c cd0000        	call	c_fmul
+1597  026f cd0000        	call	c_ftol
+1599  0272 b603          	ld	a,c_lreg+3
+1600  0274 b702          	ld	L521_colour,a
+1601                     ; 219 		colour[1] = linearSine(hue-128)*scale;
+1603  0276 7b0c          	ld	a,(OFST+0,sp)
+1604  0278 a080          	sub	a,#128
+1605  027a ad9f          	call	_linearSine
+1607  027c 5f            	clrw	x
+1608  027d 97            	ld	xl,a
+1609  027e cd0000        	call	c_itof
+1611  0281 96            	ldw	x,sp
+1612  0282 1c0001        	addw	x,#OFST-11
+1613  0285 cd0000        	call	c_rtol
+1616  0288 96            	ldw	x,sp
+1617  0289 1c0008        	addw	x,#OFST-4
+1618  028c cd0000        	call	c_ltor
+1620  028f 96            	ldw	x,sp
+1621  0290 1c0001        	addw	x,#OFST-11
+1622  0293 cd0000        	call	c_fmul
+1624  0296 cd0000        	call	c_ftol
+1626  0299 b603          	ld	a,c_lreg+3
+1627  029b b703          	ld	L521_colour+1,a
+1628                     ; 220 		colour[2] = linearSine(hue+128)*scale;
+1630  029d 7b0c          	ld	a,(OFST+0,sp)
+1631  029f ab80          	add	a,#128
+1632  02a1 cd021b        	call	_linearSine
+1634  02a4 5f            	clrw	x
+1635  02a5 97            	ld	xl,a
+1636  02a6 cd0000        	call	c_itof
+1638  02a9 96            	ldw	x,sp
+1639  02aa 1c0001        	addw	x,#OFST-11
+1640  02ad cd0000        	call	c_rtol
+1643  02b0 96            	ldw	x,sp
+1644  02b1 1c0008        	addw	x,#OFST-4
+1645  02b4 cd0000        	call	c_ltor
+1647  02b7 96            	ldw	x,sp
+1648  02b8 1c0001        	addw	x,#OFST-11
+1649  02bb cd0000        	call	c_fmul
+1651  02be cd0000        	call	c_ftol
+1653  02c1 b603          	ld	a,c_lreg+3
+1654  02c3 b704          	ld	L521_colour+2,a
+1655                     ; 222 		clear_lights();
+1657  02c5 cd0145        	call	_clear_lights
+1659                     ; 223 		setAllSameColour(colour); 
+1661  02c8 ae0002        	ldw	x,#L521_colour
+1662  02cb cd016b        	call	_setAllSameColour
+1664                     ; 224 		write_display(lights);
+1666  02ce ae0000        	ldw	x,#L321_lights
+1667  02d1 cd00f9        	call	_write_display
+1669                     ; 226 		hue += 5;
+1671  02d4 7b0c          	ld	a,(OFST+0,sp)
+1672  02d6 ab05          	add	a,#5
+1673  02d8 6b0c          	ld	(OFST+0,sp),a
+1675                     ; 228 		delay_ms(50);
+1677  02da ae0032        	ldw	x,#50
+1678  02dd cd002a        	call	_delay_ms
+1680  02e0               L375:
+1681                     ; 216 	while(!change){
+1683  02e0 3d01          	tnz	_change
+1684  02e2 2603          	jrne	L65
+1685  02e4 cc0251        	jp	L765
+1686  02e7               L65:
+1687                     ; 230 }
+1690  02e7 5b0c          	addw	sp,#12
+1691  02e9 81            	ret
+1714                     ; 232 void init_tim2(void){
+1715                     	switch	.text
+1716  02ea               _init_tim2:
+1720                     ; 234 	TIM2->PSCR |= 0x0E; // set prescaler to 16384 ~ 1kHz
+1722  02ea c6530e        	ld	a,21262
+1723  02ed aa0e          	or	a,#14
+1724  02ef c7530e        	ld	21262,a
+1725                     ; 235 	TIM2->ARRH = 0x13;
+1727  02f2 3513530f      	mov	21263,#19
+1728                     ; 236 	TIM2->ARRL = 0x88; 
+1730  02f6 35885310      	mov	21264,#136
+1731                     ; 237 	TIM2->IER |= 0x1; // generate interrupt
+1733  02fa 72105303      	bset	21251,#0
+1734                     ; 239 }
+1737  02fe 81            	ret
+1774                     ; 243 int main(void) {
+1775                     	switch	.text
+1776  02ff               _main:
+1780                     ; 246 	sim();
+1783  02ff 9b            sim
+1785                     ; 247 	CLK_DeInit();
+1788  0300 cd0000        	call	_CLK_DeInit
+1790                     ; 248 	CLK_HSECmd(DISABLE);
+1792  0303 4f            	clr	a
+1793  0304 cd0000        	call	_CLK_HSECmd
+1795                     ; 249 	CLK_HSICmd(ENABLE);
+1797  0307 a601          	ld	a,#1
+1798  0309 cd0000        	call	_CLK_HSICmd
+1800                     ; 253 	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //2MHz
+1802  030c a618          	ld	a,#24
+1803  030e cd0000        	call	_CLK_HSIPrescalerConfig
+1805                     ; 254 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV128); // 15.625kHz
+1807  0311 a687          	ld	a,#135
+1808  0313 cd0000        	call	_CLK_SYSCLKConfig
+1810                     ; 257 	GPIO_DeInit(GPIOA);
+1812  0316 ae5000        	ldw	x,#20480
+1813  0319 cd0000        	call	_GPIO_DeInit
+1815                     ; 258 	GPIO_Init(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_FAST);
+1817  031c 4be0          	push	#224
+1818  031e 4b02          	push	#2
+1819  0320 ae5000        	ldw	x,#20480
+1820  0323 cd0000        	call	_GPIO_Init
+1822  0326 85            	popw	x
+1823                     ; 259 	GPIO_Init(GPIOA, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_FAST);
+1825  0327 4be0          	push	#224
+1826  0329 4b04          	push	#4
+1827  032b ae5000        	ldw	x,#20480
+1828  032e cd0000        	call	_GPIO_Init
+1830  0331 85            	popw	x
+1831                     ; 261 	GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);
+1833  0332 4b20          	push	#32
+1834  0334 4b10          	push	#16
+1835  0336 ae5005        	ldw	x,#20485
+1836  0339 cd0000        	call	_GPIO_Init
+1838  033c 85            	popw	x
+1839                     ; 262 	EXTI->CR1 &= ~(1 << 3);
+1841  033d 721750a0      	bres	20640,#3
+1842                     ; 263 	EXTI->CR1 |= (1 << 2);
+1844  0341 721450a0      	bset	20640,#2
+1845                     ; 266 	clear_lights();
+1847  0345 cd0145        	call	_clear_lights
+1849                     ; 268 	init_tim2();
+1851  0348 ada0          	call	_init_tim2
+1853                     ; 272 	rim();
+1856  034a 9a            rim
+1858  034b               L716:
+1859                     ; 275 		dir = CW;
+1861  034b 35010000      	mov	_dir,#1
+1862                     ; 276 		RGBSpin();
+1864  034f cd019e        	call	_RGBSpin
+1866                     ; 278 		dir = CCW;
+1868  0352 35ff0000      	mov	_dir,#255
+1869                     ; 279 		RGBSpin();
+1871  0356 cd019e        	call	_RGBSpin
+1873                     ; 281 		rainbowFade();
+1875  0359 cd023d        	call	_rainbowFade
+1878  035c 20ed          	jra	L716
+1902                     ; 287 @far @interrupt void buttonHandler(void)
+1902                     ; 288 {
+1904                     	switch	.text
+1905  035e               f_buttonHandler:
+1909                     ; 291 	change = TRUE;
+1911  035e 35010001      	mov	_change,#1
+1912                     ; 293 }
+1915  0362 80            	iret
+1941                     ; 295 @far @interrupt void tim2Handler(void)
+1941                     ; 296 {
+1942                     	switch	.text
+1943  0363               f_tim2Handler:
+1945  0363 8a            	push	cc
+1946  0364 84            	pop	a
+1947  0365 a4bf          	and	a,#191
+1948  0367 88            	push	a
+1949  0368 86            	pop	cc
+1950  0369 3b0002        	push	c_x+2
+1951  036c be00          	ldw	x,c_x
+1952  036e 89            	pushw	x
+1953  036f 3b0002        	push	c_y+2
+1954  0372 be00          	ldw	x,c_y
+1955  0374 89            	pushw	x
+1958                     ; 297 	TIM2->SR1 &= ~0x01; // clear status register
+1960  0375 72115304      	bres	21252,#0
+1961                     ; 300 	clear_lights();
+1963  0379 cd0145        	call	_clear_lights
+1965                     ; 301 	write_display(lights);
+1967  037c ae0000        	ldw	x,#L321_lights
+1968  037f cd00f9        	call	_write_display
+1970                     ; 303 	halt();
+1973  0382 8e            halt
+1975                     ; 305 }
+1979  0383 85            	popw	x
+1980  0384 bf00          	ldw	c_y,x
+1981  0386 320002        	pop	c_y+2
+1982  0389 85            	popw	x
+1983  038a bf00          	ldw	c_x,x
+1984  038c 320002        	pop	c_x+2
+1985  038f 80            	iret
+2059                     	xdef	f_tim2Handler
+2060                     	xdef	f_buttonHandler
+2061                     	xdef	_main
+2062                     	xdef	_init_tim2
+2063                     	xdef	_rainbowFade
+2064                     	xdef	_linearSine
+2065                     	xdef	_RGBSpin
+2066                     	xdef	_setAllSameColour
+2067                     	xdef	_clear_lights
+2068                     	xdef	_write_display
+2069                     	xdef	_ws_write_grb_bot
+2070                     	xdef	_ws_write_grb_top
+2071                     	xdef	_ws_write_byte_bot
+2072                     	xdef	_ws_write_byte_top
+2073                     	switch	.ubsct
+2074  0000               L321_lights:
+2075  0000 000000000000  	ds.b	24
+2076                     	xdef	_delay_ms
+2077                     	xdef	_delay_ms_HS
+2078                     	xdef	_change
+2079                     	xdef	_dir
+2080                     	xref	_GPIO_Init
+2081                     	xref	_GPIO_DeInit
+2082                     	xref	_CLK_SYSCLKConfig
+2083                     	xref	_CLK_HSIPrescalerConfig
+2084                     	xref	_CLK_HSICmd
+2085                     	xref	_CLK_HSECmd
+2086                     	xref	_CLK_DeInit
+2087                     .const:	section	.text
+2088  0000               L365:
+2089  0000 3df00000      	dc.w	15856,0
+2090  0004               L701:
+2091  0004 3ecccccc      	dc.w	16076,-13108
+2092                     	xref.b	c_lreg
+2093                     	xref.b	c_x
+2094                     	xref.b	c_y
+2114                     	xref	c_ftol
+2115                     	xref	c_rtol
+2116                     	xref	c_itof
+2117                     	xref	c_ltor
+2118                     	xref	c_idiv
+2119                     	xref	c_bmulx
+2120                     	xref	c_ftoi
+2121                     	xref	c_fmul
+2122                     	xref	c_uitof
+2123                     	end

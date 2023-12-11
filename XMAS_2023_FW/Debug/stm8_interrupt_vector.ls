@@ -55,8 +55,8 @@
  115  0039 00            	dc.b	page(f_NonHandledInterrupt)
  116  003a 0000          	dc.w	f_NonHandledInterrupt
  117  003c 82            	dc.b	130
- 119  003d 00            	dc.b	page(f_NonHandledInterrupt)
- 120  003e 0000          	dc.w	f_NonHandledInterrupt
+ 119  003d 00            	dc.b	page(f_tim2Handler)
+ 120  003e 0000          	dc.w	f_tim2Handler
  121  0040 82            	dc.b	130
  123  0041 00            	dc.b	page(f_NonHandledInterrupt)
  124  0042 0000          	dc.w	f_NonHandledInterrupt
@@ -106,7 +106,8 @@
  183  007d 00            	dc.b	page(f_NonHandledInterrupt)
  184  007e 0000          	dc.w	f_NonHandledInterrupt
  235                     	xdef	__vectab
- 236                     	xref	f_buttonHandler
- 237                     	xref	__stext
- 238                     	xdef	f_NonHandledInterrupt
- 257                     	end
+ 236                     	xref	f_tim2Handler
+ 237                     	xref	f_buttonHandler
+ 238                     	xref	__stext
+ 239                     	xdef	f_NonHandledInterrupt
+ 258                     	end

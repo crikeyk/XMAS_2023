@@ -20,6 +20,7 @@ struct interrupt_vector {
 extern void _stext();     /* startup routine */
 
 extern @far @interrupt void buttonHandler (void);
+extern @far @interrupt void tim2Handler (void);
 
 struct interrupt_vector const _vectab[] = {
 	{0x82, (interrupt_handler_t)_stext}, /* reset */
@@ -37,8 +38,8 @@ struct interrupt_vector const _vectab[] = {
 	{0x82, NonHandledInterrupt}, /* irq10 */
 	{0x82, NonHandledInterrupt}, /* irq11 */
 	{0x82, NonHandledInterrupt}, /* irq12 */
-	{0x82, NonHandledInterrupt}, /* irq13 */
-	{0x82, NonHandledInterrupt}, /* irq14 */
+	{0x82, tim2Handler}, /* irq13  TIM2 update/overflow */
+	{0x82, NonHandledInterrupt}, /* irq14 TIM2 capture/comare*/
 	{0x82, NonHandledInterrupt}, /* irq15 */
 	{0x82, NonHandledInterrupt}, /* irq16 */
 	{0x82, NonHandledInterrupt}, /* irq17 */
