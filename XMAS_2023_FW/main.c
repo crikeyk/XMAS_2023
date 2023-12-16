@@ -1,4 +1,5 @@
 #include "stm8s.h"
+#include <stdlib.h>
 
 
 #define NUM_LEDS 8
@@ -13,7 +14,8 @@
 
 volatile int8_t dir = CW;
 volatile bool change = FALSE;
-
+volatile uint8_t lights[NUM_LEDS][3];
+volatile uint8_t colour[] = {0, 0, 0};
 
 void delay_ms_HS(uint16_t ms)
 {
@@ -39,8 +41,6 @@ void delay_ms(uint16_t ms)
 
 /*static int8_t sine[] = {0,0,0,0,1,1,1,2,2,3,4,5,6,6,7,9,10,11,12,14,15,17,18,20,22,23,25,27,29,31,33,35,37,40,42,44,47,49,52,54,57,60,62,65,68,70,73,76,79,82,85,88,91,94,97,100,103,106,109,112,115,119,122,125,128,131,134,137,141,144,147,150,153,156,159,162,165,168,171,174,177,180,183,186,188,191,194,196,199,202,204,207,209,212,214,216,219,221,223,225,227,229,231,233,234,236,238,239,241,242,244,245,246,247,249,250,250,251,252,253,254,254,255,255,255,256,256,256,256,256,256,256,255,255,255,254,254,253,252,251,250,250,249,247,246,245,244,242,241,239,238,236,234,233,231,229,227,225,223,221,219,216,214,212,209,207,204,202,199,196,194,191,188,186,183,180,177,174,171,168,165,162,159,156,153,150,147,144,141,137,134,131,128,125,122,119,115,112,109,106,103,100,97,94,91,88,85,82,79,76,73,70,68,65,62,60,57,54,52,49,47,44,42,40,37,35,33,31,29,27,25,23,22,20,18,17,15,14,12,11,10,9,7,6,6,5,4,3,2,2,1,1,1,0,0,0};*/
 
-static uint8_t lights[NUM_LEDS][3];
-static uint8_t colour[] = {0, 0, 0};
 
 void ws_write_byte_top(uint8_t byte)
 {
@@ -177,9 +177,11 @@ void RGBSpin(void)
 	uint8_t press = 0;
 
 	change = FALSE;
+	clear_lights();
+	
 	while (!change) {
 		clear_lights();
-		lights[i][j] = MAX_BRIGHTNESS;
+		lights[i][j] = MAX_BRIGHTNESS/2;
 		write_display(lights);
 					
 		i += dir;
@@ -193,6 +195,7 @@ void RGBSpin(void)
 		delay_ms(125);
 	}
 }
+
 
 uint8_t linearSine(uint8_t val){
 	val %= 256;
@@ -211,8 +214,9 @@ void rainbowFade(void)
 	uint8_t blue = 0;
 	float scale = MAX_BRIGHTNESS*1.0/256;
 
-
 	change = FALSE;
+	clear_lights();	
+	
 	while(!change){
 		
 		colour[0] = linearSine(hue)*scale;
@@ -223,17 +227,81 @@ void rainbowFade(void)
 		setAllSameColour(colour); 
 		write_display(lights);
 		
-		hue += 5;
+		hue += 10;
 		
-		delay_ms(50);
+		//delay_ms(10);
+	}
+}
+
+void RGBPulse(void)
+{
+
+	uint8_t hue = 0;
+	uint8_t red = 0;
+	uint8_t green = 0;
+	uint8_t blue = 0;
+	uint8_t colour_int = 0;
+	float scale = MAX_BRIGHTNESS*1.0/256;
+	
+	change = FALSE;
+	clear_lights();
+	write_display(lights);
+	colour[0] = 0;
+	colour[1] = 0;
+	colour[2] = 0;
+
+	change = FALSE;
+	while(TRUE){
+		for(colour_int = 0;colour_int<3;colour_int+=1){
+			for(hue = 0;hue<250;hue+=10){
+				
+				colour[colour_int] = linearSine(hue)*scale;
+				
+				clear_lights();
+				setAllSameColour(colour); 
+				write_display(lights);
+				
+				//delay_ms(10);
+				
+				if(change){
+					return;
+				}
+			}
+			colour[colour_int] = 0;
+
+		}
+	}
+}
+
+void random(void){
+	
+	uint8_t rand_led = 0;
+	
+	change = FALSE;
+	clear_lights();
+	
+	while(!change){
+		
+		clear_lights();
+
+		rand_led = rand() % 8;
+		
+		lights[rand_led][0] = rand() % MAX_BRIGHTNESS/2;
+		lights[rand_led][1] = rand() % MAX_BRIGHTNESS/2;
+		lights[rand_led][2] = rand() % MAX_BRIGHTNESS/2;
+		
+		write_display(lights);
+		
+		delay_ms(100);
+
 	}
 }
 
 void init_tim2(void){
 	
 	TIM2->PSCR |= 0x0E; // set prescaler to 16384 ~ 1kHz
-	TIM2->ARRH = 0x13;
-	TIM2->ARRL = 0x88; 
+	TIM2->ARRH = 0x0B;
+	TIM2->ARRL = 0xB8; 
 	TIM2->IER |= 0x1; // generate interrupt
 	
 }
@@ -265,18 +333,24 @@ int main(void) {
 	
 	init_tim2();
 			
-	//TIM2->CR1 |= 0x1; // enable counter
+	TIM2->CR1 |= 0x1; // enable counter
 	
 	rim();
 
 	while(1){
+		
+		rainbowFade();
+		
+		random();
+		
+		RGBPulse();
+		
 		dir = CW;
 		RGBSpin();
 		
 		dir = CCW;
 		RGBSpin();
-		
-		rainbowFade();
+
 	}
 	
     
@@ -295,9 +369,10 @@ int main(void) {
 	TIM2->SR1 &= ~0x01; // clear status register
 	//TIM2->CR1 &= ~0x01; // disable counter
 	
-	clear_lights();
-	write_display(lights);
+	change = TRUE;
 	
-	halt();
+	//clear_lights();
+	//write_display(lights);
+	//halt();
 	
 }
